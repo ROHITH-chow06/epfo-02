@@ -549,7 +549,12 @@ app.post('/api/voice-command', upload.single('audio'), async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 4173;
-app.listen(PORT, () => {
+// Render compatibility: Health check
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
+
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`EPFO Portal and AI Server running securely on http://localhost:${PORT}`);
 });
