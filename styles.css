@@ -4640,3 +4640,44 @@ button.welcome-highlight,
     position: static !important;
   }
 }
+
+/* Mobile Fix for Floating Controls Overlap */
+@media (max-width: 1023px) {
+  .desktop-ai-assistant-area {
+    position: fixed !important;
+    bottom: 24px !important;
+    right: 16px !important;
+    left: 16px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-end !important;
+    gap: 16px !important;
+    z-index: 10000 !important;
+    pointer-events: none !important;
+    height: auto !important;
+  }
+
+  .ai-guide-panel {
+    position: relative !important;
+    bottom: auto !important;
+    right: auto !important;
+    left: auto !important;
+    width: 100% !important;
+    max-height: calc(100vh - 180px) !important;
+  }
+  
+  .ai-guide-panel.open {
+    pointer-events: auto !important;
+  }
+
+  .ai-guide-controls {
+    position: relative !important;
+    bottom: auto !important;
+    right: auto !important;
+    pointer-events: auto !important;
+    display: flex !important;
+    flex-direction: row-reverse !important;
+    justify-content: flex-start !important;
+    width: 100% !important;
+  }
+}

@@ -399,37 +399,87 @@ function renderRoute() { const rawRoute = location.hash.replace('#/', '') || 'da
 const menuToggle = document.querySelector('#menuToggle'); const mobileMenu = document.querySelector('#mobileMenu'); const backdrop = document.querySelector('#menuBackdrop'); const setMobileMenu = open => { mobileMenu.classList.toggle('open', open); backdrop.classList.toggle('open', open); mobileMenu.setAttribute('aria-hidden', String(!open)); menuToggle.setAttribute('aria-expanded', String(open)); if (open) document.querySelector('#closeMenu').focus(); }; menuToggle.addEventListener('click', () => setMobileMenu(!mobileMenu.classList.contains('open'))); document.querySelector('#closeMenu').addEventListener('click', () => setMobileMenu(false)); backdrop.addEventListener('click', () => setMobileMenu(false)); document.addEventListener('keydown', e => { if (e.key === 'Escape') { const overlay = document.querySelector('#passbookOverlay'); if (overlay?.classList.contains('open')) { overlay.classList.remove('open'); document.body.classList.remove('modal-open'); } else setMobileMenu(false); } }); window.addEventListener('hashchange', renderRoute); if (!location.hash) location.hash = '#/dashboard'; else renderRoute();
 
 function checkWelcomeMessage() {
+  if (sessionStorage.getItem('epfoWelcomePlayed')) return;
+
   const isDesktopViewport = window.innerWidth >= 1024;
-  if (isDesktopViewport && !sessionStorage.getItem('epfoWelcomePlayed')) {
-    sessionStorage.setItem('epfoWelcomePlayed', 'true');
-    let attempts = 0;
-    const interval = setInterval(() => {
-      attempts++;
-      if (typeof voiceEngine !== 'undefined' && typeof guideState !== 'undefined' && guideState.isOpen && !guideState.isActive) {
-        clearInterval(interval);
-        const utterance = voiceEngine.speakResponse("Hi Demo Member! I can help you with your EPF account, claims, or guide you through any step. How can I assist you today? Choose an option in the chat box, or give me a voice message by tapping the microphone.", "en");
-        const voiceFab = document.getElementById('aiVoiceFab');
-        const guideFab = document.getElementById('aiGuideFab');
+
+  const doPlay = () => {
+    if (sessionStorage.getItem('epfoWelcomePlayed')) return;
+
+    const utterance = voiceEngine.speakResponse("Hi Demo Member! I can help you with your EPF account, claims, or guide you through any step. How can I assist you today? Choose an option in the chat box, or give me a voice message by tapping the microphone.", "en");
+    if (!utterance) return;
+
+    let hasStarted = false;
+    const voiceFab = document.getElementById('aiVoiceFab');
+    const guideFab = document.getElementById('aiGuideFab');
+
+    const clearHighlight = () => {
+      if (voiceFab) voiceFab.classList.remove('welcome-highlight');
+      if (guideFab) guideFab.classList.remove('welcome-highlight');
+    };
+
+    utterance.onstart = () => {
+      hasStarted = true;
+      sessionStorage.setItem('epfoWelcomePlayed', 'true');
+      if (voiceFab) voiceFab.classList.add('welcome-highlight');
+      if (guideFab) guideFab.classList.add('welcome-highlight');
+    };
+
+    utterance.onend = clearHighlight;
+    utterance.onerror = (e) => {
+      clearHighlight();
+      if (!hasStarted) {
+        setupInteractionFallback();
+      }
+    };
+    
+    // Safety timeout in case onstart doesn't fire but synthesis is active
+    setTimeout(() => {
+      if (!hasStarted && window.speechSynthesis && window.speechSynthesis.speaking) {
+        hasStarted = true;
+        sessionStorage.setItem('epfoWelcomePlayed', 'true');
         if (voiceFab) voiceFab.classList.add('welcome-highlight');
         if (guideFab) guideFab.classList.add('welcome-highlight');
-        
-        const clearHighlight = () => {
-          if (voiceFab) voiceFab.classList.remove('welcome-highlight');
-          if (guideFab) guideFab.classList.remove('welcome-highlight');
-        };
-        
-        if (utterance) {
-          utterance.onend = clearHighlight;
-          utterance.onerror = clearHighlight;
-          setTimeout(clearHighlight, 15000); // safety fallback
-        } else {
-          setTimeout(clearHighlight, 5000);
-        }
-      } else if (attempts > 30) {
-        clearInterval(interval);
+        setTimeout(clearHighlight, 12000);
+      } else if (!hasStarted && !isDesktopViewport) {
+        setupInteractionFallback();
       }
-    }, 100);
-  }
+    }, 500);
+  };
+
+  const setupInteractionFallback = () => {
+    if (sessionStorage.getItem('epfoWelcomePlayed') || window.welcomeListenerAttached) return;
+    window.welcomeListenerAttached = true;
+
+    const interactionHandler = () => {
+      document.removeEventListener('click', interactionHandler, true);
+      document.removeEventListener('touchstart', interactionHandler, true);
+      if (!sessionStorage.getItem('epfoWelcomePlayed')) {
+        doPlay();
+      }
+    };
+
+    document.addEventListener('click', interactionHandler, true);
+    document.addEventListener('touchstart', interactionHandler, true);
+  };
+
+  let attempts = 0;
+  const interval = setInterval(() => {
+    attempts++;
+    const isReady = typeof voiceEngine !== 'undefined' && typeof guideState !== 'undefined';
+    
+    // On desktop, we wait until the panel is fully open.
+    // On mobile, the panel is closed by default, so we just need engine to be ready.
+    const isDesktopReady = isReady && isDesktopViewport && guideState.isOpen && !guideState.isActive;
+    const isMobileReady = isReady && !isDesktopViewport;
+
+    if (isDesktopReady || isMobileReady) {
+      clearInterval(interval);
+      doPlay();
+    } else if (attempts > 50) {
+      clearInterval(interval);
+    }
+  }, 100);
 }
 
 // ==========================================
