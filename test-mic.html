@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mic Test - Voice Orchestration</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: 40px auto; }
+    button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin-right: 10px; }
+    pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    .status { margin-top: 10px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h2>Real Microphone Test</h2>
+  <p>Use this to test actual Hindi/Hinglish transcription with your voice.</p>
+  
+  <div>
+    <button id="recordBtn">🎤 Start Recording</button>
+    <button id="stopBtn" disabled>⏹ Stop & Send</button>
+  </div>
+  
+  <div class="status" id="status">Ready.</div>
+  
+  <h3>Response:</h3>
+  <pre id="output">No response yet...</pre>
+
+  <script>
+    let mediaRecorder;
+    let audioChunks = [];
+
+    const recordBtn = document.getElementById('recordBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const statusDiv = document.getElementById('status');
+    const outputPre = document.getElementById('output');
+
+    recordBtn.addEventListener('click', async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+
+        mediaRecorder.ondataavailable = e => {
+          if (e.data.size > 0) audioChunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = async () => {
+          const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+          const formData = new FormData();
+          formData.append('audio', audioBlob, 'mic-record.webm');
+          
+          // Add some dummy context to test context-awareness
+          formData.append('context', JSON.stringify({
+            activeJourney: 'file_pf_claim',
+            currentStep: 3,
+            guideStatus: 'active'
+          }));
+
+          statusDiv.innerText = 'Sending to /api/voice-command...';
+          outputPre.innerText = 'Processing...';
+
+          try {
+            const res = await fetch('/api/voice-command', {
+              method: 'POST',
+              body: formData
+            });
+            const data = await res.json();
+            outputPre.innerText = JSON.stringify(data, null, 2);
+            statusDiv.innerText = data.success ? 'Success!' : 'Error!';
+          } catch (err) {
+            outputPre.innerText = err.message;
+            statusDiv.innerText = 'Network error.';
+          }
+        };
+
+        mediaRecorder.start();
+        statusDiv.innerText = 'Recording... Speak now!';
+        recordBtn.disabled = true;
+        stopBtn.disabled = false;
+      } catch (err) {
+        statusDiv.innerText = 'Mic access denied: ' + err.message;
+      }
+    });
+
+    stopBtn.addEventListener('click', () => {
+      mediaRecorder.stop();
+      mediaRecorder.stream.getTracks().forEach(t => t.stop());
+      recordBtn.disabled = false;
+      stopBtn.disabled = true;
+    });
+  </script>
+</body>
+</html>
