@@ -398,6 +398,89 @@ function bindServiceHistory() {
 function renderRoute() { const rawRoute = location.hash.replace('#/', '') || 'dashboard'; const [route, query] = rawRoute.split('?'); const claimId = route.startsWith('claim/') ? route.split('/')[1] : null; const claim = claims.find(item => item.id === claimId) || claims[0]; app.innerHTML = route === 'passbook' ? passbookView() : route === 'claims' ? claimsView() : route === 'file-claim' ? fileClaimView() : route === 'claim-success' && claimFlow.submitted ? successView() : route === 'service-history' ? serviceHistoryView() : claimId ? claimDetailView(claim) : dashboardView(); document.querySelector('.nav-home').classList.toggle('active', route === 'dashboard'); if (route === 'passbook') bindPassbook(); if (route === 'claims' || route === 'file-claim') bindFlow(); if (route === 'claims') bindClaims(); if (route === 'service-history') bindServiceHistory(); if (claimId) bindClaimDetails(query === 'track'); if (mobileMenu.classList.contains('open')) setMobileMenu(false); if (route === 'dashboard') checkWelcomeMessage(); }
 const menuToggle = document.querySelector('#menuToggle'); const mobileMenu = document.querySelector('#mobileMenu'); const backdrop = document.querySelector('#menuBackdrop'); const setMobileMenu = open => { mobileMenu.classList.toggle('open', open); backdrop.classList.toggle('open', open); mobileMenu.setAttribute('aria-hidden', String(!open)); menuToggle.setAttribute('aria-expanded', String(open)); if (open) document.querySelector('#closeMenu').focus(); }; menuToggle.addEventListener('click', () => setMobileMenu(!mobileMenu.classList.contains('open'))); document.querySelector('#closeMenu').addEventListener('click', () => setMobileMenu(false)); backdrop.addEventListener('click', () => setMobileMenu(false)); document.addEventListener('keydown', e => { if (e.key === 'Escape') { const overlay = document.querySelector('#passbookOverlay'); if (overlay?.classList.contains('open')) { overlay.classList.remove('open'); document.body.classList.remove('modal-open'); } else setMobileMenu(false); } }); window.addEventListener('hashchange', renderRoute); if (!location.hash) location.hash = '#/dashboard'; else renderRoute();
 
+// PLACEHOLDER LANGUAGE DROPDOWN LOGIC
+const langToggleBtn = document.getElementById('langToggleBtn');
+const langDropdown = document.getElementById('langDropdown');
+const langSecondary = document.getElementById('langSecondary');
+if (langToggleBtn && langDropdown) {
+  langToggleBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    langDropdown.style.display = langDropdown.style.display === 'none' ? 'block' : 'none';
+  });
+  document.addEventListener('click', () => {
+    langDropdown.style.display = 'none';
+  });
+  langDropdown.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (langSecondary) langSecondary.textContent = btn.textContent;
+    });
+  });
+}
+
+// ONE-TIME NATIVE GEOLOCATION REQUEST
+if (!sessionStorage.getItem('epfo_loc_requested')) {
+  sessionStorage.setItem('epfo_loc_requested', 'true');
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => { /* Silently receive coords */ },
+      (err) => { /* Silently ignore errors */ }
+    );
+  }
+}
+
+// FEATURE 1: DISCLAIMER BANNER
+const initDisclaimer = () => {
+  const banner = document.getElementById('disclaimerBanner');
+  if (!banner || sessionStorage.getItem('epfo_disclaimer_closed')) return;
+
+  banner.style.display = 'block';
+
+  const closeBanner = () => {
+    banner.classList.add('fade-out');
+    setTimeout(() => {
+      banner.style.display = 'none';
+    }, 400); // match transition
+    sessionStorage.setItem('epfo_disclaimer_closed', 'true');
+  };
+
+  document.getElementById('closeDisclaimer')?.addEventListener('click', closeBanner);
+
+  // Auto hide after 5 seconds
+  setTimeout(closeBanner, 5000);
+};
+initDisclaimer();
+
+// FEATURE 2: LANGUAGE INFO POPUP
+const initLangPopup = () => {
+  const toggleBtn = document.getElementById('langToggleBtn');
+  const popup = document.getElementById('langInfoPopup');
+  const overlay = document.getElementById('langInfoPopupOverlay');
+  const closeBtn = document.getElementById('closeLangPopup');
+  const closeX = document.getElementById('closeLangPopupX');
+
+  if (!toggleBtn || !popup || !overlay) return;
+
+  const closePopup = () => {
+    popup.style.display = 'none';
+    overlay.style.display = 'none';
+  };
+
+  // We add an intercept to the toggle button. Since the original click listener is still active,
+  // we just trigger the popup alongside it.
+  toggleBtn.addEventListener('click', () => {
+    // Only show if they haven't seen it in this session (optional, but good UX)
+    if (!sessionStorage.getItem('epfo_lang_popup_seen')) {
+      popup.style.display = 'block';
+      overlay.style.display = 'block';
+      sessionStorage.setItem('epfo_lang_popup_seen', 'true');
+    }
+  });
+
+  closeBtn?.addEventListener('click', closePopup);
+  closeX?.addEventListener('click', closePopup);
+  overlay.addEventListener('click', closePopup);
+};
+initLangPopup();
 function checkWelcomeMessage() {
   if (sessionStorage.getItem('epfoWelcomePlayed')) return;
 
@@ -432,7 +515,7 @@ function checkWelcomeMessage() {
         setupInteractionFallback();
       }
     };
-    
+
     // Safety timeout in case onstart doesn't fire but synthesis is active
     setTimeout(() => {
       if (!hasStarted && window.speechSynthesis && window.speechSynthesis.speaking) {
@@ -467,7 +550,7 @@ function checkWelcomeMessage() {
   const interval = setInterval(() => {
     attempts++;
     const isReady = typeof voiceEngine !== 'undefined' && typeof guideState !== 'undefined';
-    
+
     // On desktop, we wait until the panel is fully open.
     // On mobile, the panel is closed by default, so we just need engine to be ready.
     const isDesktopReady = isReady && isDesktopViewport && guideState.isOpen && !guideState.isActive;
@@ -1197,7 +1280,7 @@ const voiceEngine = {
     formData.append('context', JSON.stringify(this.getAppContext()));
 
     try {
-      const res = await fetch('http://localhost:4173/api/voice-command', { method: 'POST', body: formData });
+      const res = await fetch('/api/voice-command', { method: 'POST', body: formData });
       const data = await res.json();
 
       if (data.success) {
@@ -1208,6 +1291,9 @@ const voiceEngine = {
         this.updateUI('error', "I couldn't hear that clearly. Please try again.");
       }
     } catch (err) {
+      console.error('VOICE PIPELINE FRONTEND ERROR:');
+      console.error('Request URL: http://localhost:4173/api/voice-command');
+      console.error('Actual JavaScript error:', err);
       this.updateUI('error', "Network error. Please check your connection.");
     }
   },
@@ -1413,3 +1499,17 @@ if (document.readyState === 'complete' || document.readyState === 'interactive')
     voiceEngine.init();
   });
 }
+
+// FEATURE: DEMO WARNING BANNER LOGIC
+const checkDemoWarning = () => {
+  const demoBanner = document.getElementById('demoWarningBanner');
+  if (demoBanner) {
+    const rawRoute = location.hash.replace('#/', '') || 'dashboard';
+    const [route] = rawRoute.split('?');
+    // Display only when actively in a filing flow (Form 19, 10C, 31 use 'file-claim')
+    demoBanner.style.display = route === 'file-claim' ? 'flex' : 'none';
+  }
+};
+window.addEventListener('hashchange', checkDemoWarning);
+// Check on initial load too
+setTimeout(checkDemoWarning, 0);

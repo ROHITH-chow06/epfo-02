@@ -5,14 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#005b4f" />
     <title>EPFO Member Portal</title>
-    <link rel="stylesheet" href="./styles.css?v=4" />
+    <link rel="stylesheet" href="./styles.css?v=9" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
+    <div id="disclaimerBanner" class="disclaimer-banner" style="display:none;" aria-live="polite">
+      <div class="shell banner-inner">
+        <p>⚠️ This is not an official Government of India or EPFO website. This is an independent prototype/demo created for demonstration purposes.</p>
+        <button id="closeDisclaimer" aria-label="Close disclaimer">×</button>
+      </div>
+    </div>
+    <div id="langInfoPopupOverlay" class="lang-popup-overlay" style="display:none;"></div>
+    <div id="langInfoPopup" class="lang-info-popup" style="display:none;" role="dialog" aria-modal="true">
+      <div class="lang-popup-content">
+        <button id="closeLangPopupX" aria-label="Close" class="lang-popup-x">×</button>
+        <h3>Personalised language support is coming</h3>
+        <p>We’re building a feature that uses your state location to suggest your preferred regional language automatically. You’ll always be able to switch languages manually.</p>
+        <div class="lang-popup-status">🚧 This feature is currently being built and will be available before our Round 2 submission.</div>
+        <button id="closeLangPopup" class="primary-button popup-got-it">Got it</button>
+      </div>
+    </div>
     <header class="site-header">
-      <div class="utility-bar"><div class="shell utility-inner"><span>भारत सरकार | Government of India</span><div><button class="text-control" type="button" aria-label="Decrease text size">A−</button><button class="text-control" type="button" aria-label="Increase text size">A+</button><button class="language" type="button">हिंदी</button></div></div></div>
-      <div class="shell masthead">
+      <div class="utility-bar">
+        <div class="shell utility-inner">
+          <span>भारत सरकार | Government of India</span>
+          <div id="demoWarningBanner" class="demo-warning-banner" style="display:none;">
+            <span aria-hidden="true">⚠️</span> <span class="demo-warn-text"><strong>DEMO MODE:</strong> Use any random values for OTPs, mobile no, and account nos. Do not enter real info.</span>
+          </div>
+          <div><button class="text-control" type="button" aria-label="Decrease text size">A−</button><button class="text-control" type="button" aria-label="Increase text size">A+</button></div>
+        </div>
+      </div>
+      <div class="shell masthead" style="position: relative;">
         <a href="#/dashboard" class="brand" aria-label="EPFO Member Portal home"><img src="logo.png" alt="EPFO Logo" class="emblem-logo" /><span><strong>EMPLOYEES' PROVIDENT FUND<br class="desktop-only" /> ORGANISATION, INDIA</strong><small>MINISTRY OF LABOUR &amp; EMPLOYMENT, GOVERNMENT OF INDIA</small></span></a>
+
+        <div class="lang-selector-wrapper" id="langSelectorWrapper">
+          <button class="lang-toggle-btn" type="button" id="langToggleBtn">
+            <span class="lang-primary">English</span>
+            <span class="lang-swap" aria-hidden="true">⇄</span>
+            <span class="lang-secondary" id="langSecondary">తెలుగు</span>
+            <span class="lang-caret" aria-hidden="true">▾</span>
+          </button>
+          <div class="lang-dropdown" id="langDropdown" style="display:none;">
+            <button data-lang="తెలుగు">తెలుగు</button>
+            <button data-lang="ಕನ್ನಡ">ಕನ್ನಡ</button>
+            <button data-lang="हिन्दी">हिन्दी</button>
+          </div>
+        </div>
+
         <div class="account-summary"><span class="uan">UAN: XXXX XXXX 4821</span><span class="member-name">Welcome, <strong>Demo Member</strong></span><button class="logout" type="button">Logout <span aria-hidden="true">↗</span></button></div>
       </div>
     </header>
@@ -28,6 +67,6 @@
     <div class="menu-backdrop" id="menuBackdrop"></div>
 
     <main id="main-content" tabindex="-1"></main>
-    <script src="./app.js?v=4"></script>
+    <script src="./app.js?v=9"></script>
   </body>
 </html>
