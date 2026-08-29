@@ -1,72 +1,114 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#005b4f" />
-    <title>EPFO Member Portal</title>
-    <link rel="stylesheet" href="./styles.css?v=9" />
-  </head>
-  <body>
-    <a class="skip-link" href="#main-content">Skip to main content</a>
-    <div id="disclaimerBanner" class="disclaimer-banner" style="display:none;" aria-live="polite">
-      <div class="shell banner-inner">
-        <p>⚠️ This is not an official Government of India or EPFO website. This is an independent prototype/demo created for demonstration purposes.</p>
-        <button id="closeDisclaimer" aria-label="Close disclaimer">×</button>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#005b4f" />
+  <title>EPFO Member Portal</title>
+  <link rel="stylesheet" href="./styles.css?v=9" />
+</head>
+
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <div id="disclaimerBanner" class="disclaimer-banner" style="display:none;" aria-live="polite">
+    <div class="shell banner-inner">
+      <p>⚠️ This is not an official Government of India or EPFO website. This is an independent prototype/demo created
+        for demonstration purposes.</p>
+      <button id="closeDisclaimer" aria-label="Close disclaimer">×</button>
+    </div>
+  </div>
+  <div id="langInfoPopupOverlay" class="lang-popup-overlay" style="display:none;"></div>
+  <div id="langInfoPopup" class="lang-info-popup" style="display:none;" role="dialog" aria-modal="true">
+    <div class="lang-popup-content">
+      <button id="closeLangPopupX" aria-label="Close" class="lang-popup-x">×</button>
+      <h3>Personalised language support is coming</h3>
+      <p>We’re building a feature that uses your state location to suggest your preferred regional language
+        automatically. You’ll always be able to switch languages manually.</p>
+      <div class="lang-popup-status">🚧 This feature is currently being built and will be available before our Round 2
+        submission.</div>
+      <button id="closeLangPopup" class="primary-button popup-got-it">Got it</button>
+    </div>
+  </div>
+  <header class="site-header">
+    <div class="utility-bar">
+      <div class="shell utility-inner">
+        <span>भारत सरकार | Government of India</span>
+        <div id="demoWarningBanner" class="demo-warning-banner" style="display:none;">
+          <span aria-hidden="true">⚠️</span> <span class="demo-warn-text"><strong>DEMO MODE:</strong> Use any random
+            values for OTPs, mobile no, and account nos. Do not enter real info.</span>
+        </div>
+        <div class="account-switcher" style="margin-right: 15px; display: flex; align-items: center; gap: 8px;">
+          <label for="demoAccountSelect" style="font-size: 13px; font-weight: bold;">Demo Account:</label>
+          <select id="demoAccountSelect" class="text-control" style="padding: 2px 8px; border-radius: 4px; background: transparent; border: 1px solid currentColor; color: inherit; font-size: 13px; cursor: pointer;">
+            <option value="1" style="color:#000">Demo Member 1</option>
+            <option value="2" style="color:#000">Demo Member 2</option>
+          </select>
+        </div>
+        <div><button class="text-control" type="button" aria-label="Decrease text size">A−</button><button
+            class="text-control" type="button" aria-label="Increase text size">A+</button></div>
       </div>
     </div>
-    <div id="langInfoPopupOverlay" class="lang-popup-overlay" style="display:none;"></div>
-    <div id="langInfoPopup" class="lang-info-popup" style="display:none;" role="dialog" aria-modal="true">
-      <div class="lang-popup-content">
-        <button id="closeLangPopupX" aria-label="Close" class="lang-popup-x">×</button>
-        <h3>Personalised language support is coming</h3>
-        <p>We’re building a feature that uses your state location to suggest your preferred regional language automatically. You’ll always be able to switch languages manually.</p>
-        <div class="lang-popup-status">🚧 This feature is currently being built and will be available before our Round 2 submission.</div>
-        <button id="closeLangPopup" class="primary-button popup-got-it">Got it</button>
+    <div class="shell masthead" style="position: relative;">
+      <a href="#/dashboard" class="brand" aria-label="EPFO Member Portal home"><img src="logo.png" alt="EPFO Logo"
+          class="emblem-logo" /><span><strong>EMPLOYEES' PROVIDENT FUND<br class="desktop-only" /> ORGANISATION,
+            INDIA</strong><small>MINISTRY OF LABOUR &amp; EMPLOYMENT, GOVERNMENT OF INDIA</small></span></a>
+
+      <div class="lang-selector-wrapper" id="langSelectorWrapper">
+        <button class="lang-toggle-btn" type="button" id="langToggleBtn">
+          <span class="lang-primary">English</span>
+          <span class="lang-swap" aria-hidden="true">⇄</span>
+          <span class="lang-secondary" id="langSecondary">తెలుగు</span>
+          <span class="lang-caret" aria-hidden="true">▾</span>
+        </button>
+        <div class="lang-dropdown" id="langDropdown" style="display:none;">
+          <button data-lang="తెలుగు">తెలుగు</button>
+          <button data-lang="ಕನ್ನಡ">ಕನ್ನಡ</button>
+          <button data-lang="हिन्दी">हिन्दी</button>
+        </div>
+      </div>
+
+      <div class="account-summary"><span class="uan" id="headerUan">UAN: XXXX XXXX 4821</span><span class="member-name"><span
+            data-i18n="header.welcome">Welcome</span>, <strong id="headerMemberName">Demo Member</strong></span><button class="logout"
+          type="button"><span data-i18n="header.logout">Logout</span> <span aria-hidden="true">↗</span></button></div>
+    </div>
+  </header>
+
+  <nav class="primary-nav" aria-label="Primary navigation">
+    <div class="shell nav-inner">
+      <a class="nav-home active" href="#/dashboard">⌂ <span data-i18n="nav.dashboard">Home</span></a>
+      <div class="desktop-nav" id="desktopNav"></div>
+      <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mobileMenu"><span
+          aria-hidden="true">☰</span> Menu</button>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <div class="mobile-menu-head"><strong data-i18n="header.portal">Member portal menu</strong><button id="closeMenu"
+        type="button" aria-label="Close menu">×</button></div>
+    <div id="mobileNav"></div><button class="mobile-logout" type="button" data-i18n="header.logout">Logout from
+      portal</button>
+  </div>
+  <div class="menu-backdrop" id="menuBackdrop"></div>
+
+  <main id="main-content" tabindex="-1"></main>
+
+  <div id="prerequisitePopupOverlay" class="lang-popup-overlay" style="display:none;"></div>
+  <div id="prerequisitePopup" class="lang-info-popup" style="display:none;" role="dialog" aria-modal="true">
+    <div class="lang-popup-content" style="text-align: left;">
+      <h3 style="margin-top:0;">Complete this step first</h3>
+      <p style="margin-bottom: 16px;">Your <strong>KYC (PAN)</strong> needs to be updated before you can continue with this claim. Please update it in your profile.</p>
+      <div class="lang-popup-status" style="background:#eaf4fa; color:#075d80; margin-bottom:16px;">
+        Demo Simulation: In the real portal, this would link to the KYC update page.
+      </div>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <button id="goToKycBtn" class="primary-button" style="width:100%;">Go to KYC Portal →</button>
+        <button id="closePrerequisiteBtn" class="secondary-button" style="width:100%;">Back to claim</button>
       </div>
     </div>
-    <header class="site-header">
-      <div class="utility-bar">
-        <div class="shell utility-inner">
-          <span>भारत सरकार | Government of India</span>
-          <div id="demoWarningBanner" class="demo-warning-banner" style="display:none;">
-            <span aria-hidden="true">⚠️</span> <span class="demo-warn-text"><strong>DEMO MODE:</strong> Use any random values for OTPs, mobile no, and account nos. Do not enter real info.</span>
-          </div>
-          <div><button class="text-control" type="button" aria-label="Decrease text size">A−</button><button class="text-control" type="button" aria-label="Increase text size">A+</button></div>
-        </div>
-      </div>
-      <div class="shell masthead" style="position: relative;">
-        <a href="#/dashboard" class="brand" aria-label="EPFO Member Portal home"><img src="logo.png" alt="EPFO Logo" class="emblem-logo" /><span><strong>EMPLOYEES' PROVIDENT FUND<br class="desktop-only" /> ORGANISATION, INDIA</strong><small>MINISTRY OF LABOUR &amp; EMPLOYMENT, GOVERNMENT OF INDIA</small></span></a>
+  </div>
 
-        <div class="lang-selector-wrapper" id="langSelectorWrapper">
-          <button class="lang-toggle-btn" type="button" id="langToggleBtn">
-            <span class="lang-primary">English</span>
-            <span class="lang-swap" aria-hidden="true">⇄</span>
-            <span class="lang-secondary" id="langSecondary">తెలుగు</span>
-            <span class="lang-caret" aria-hidden="true">▾</span>
-          </button>
-          <div class="lang-dropdown" id="langDropdown" style="display:none;">
-            <button data-lang="తెలుగు">తెలుగు</button>
-            <button data-lang="ಕನ್ನಡ">ಕನ್ನಡ</button>
-            <button data-lang="हिन्दी">हिन्दी</button>
-          </div>
-        </div>
+  <script src="./i18n.js?v=9"></script>
+  <script src="./app.js?v=9"></script>
+</body>
 
-        <div class="account-summary"><span class="uan">UAN: XXXX XXXX 4821</span><span class="member-name">Welcome, <strong>Demo Member</strong></span><button class="logout" type="button">Logout <span aria-hidden="true">↗</span></button></div>
-      </div>
-    </header>
-
-    <nav class="primary-nav" aria-label="Primary navigation">
-      <div class="shell nav-inner">
-        <a class="nav-home active" href="#/dashboard">⌂ <span>Home</span></a>
-        <div class="desktop-nav" id="desktopNav"></div>
-        <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mobileMenu"><span aria-hidden="true">☰</span> Menu</button>
-      </div>
-    </nav>
-    <div class="mobile-menu" id="mobileMenu" aria-hidden="true"><div class="mobile-menu-head"><strong>Member portal menu</strong><button id="closeMenu" type="button" aria-label="Close menu">×</button></div><div id="mobileNav"></div><button class="mobile-logout" type="button">Logout from portal</button></div>
-    <div class="menu-backdrop" id="menuBackdrop"></div>
-
-    <main id="main-content" tabindex="-1"></main>
-    <script src="./app.js?v=9"></script>
-  </body>
 </html>

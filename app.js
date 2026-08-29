@@ -14,10 +14,21 @@ const claims = [
   { id: 'action', type: 'Advance Claim', form: 'Form 31', date: 'Submitted 22 Sep 2025', submitted: '22 September 2025', amount: '₹ 4,500', status: 'Requires Action', reference: 'CLM-2025-09221', stage: 1, note: 'Additional information is required.', activity: [['22 Sep 2025', 'Claim submitted', 'Your advance claim was successfully submitted.'], ['23 Sep 2025', 'Under review', 'We need additional information to continue this claim.']] }
 ];
 const statusClass = status => status.toLowerCase().replace(/\s+/g, '-');
-const dashboardView = () => `<div class="shell"><div class="breadcrumb"><span>Member Portal</span><span>/</span><strong>Dashboard</strong></div><div class="welcome-row"><div><p class="eyebrow">MEMBER DASHBOARD</p><h1>Good morning, Demo Member</h1><p>Here is a simple view of your EPF account and available services.</p></div><p class="last-login">Last login: 25 Aug 2026, 10:30 AM</p></div><div class="dashboard-grid"><div class="dashboard-col-left" style="display:flex;flex-direction:column;gap:18px;"><section class="primary-experience"><div class="panel-heading"><div><p class="eyebrow teal">MY EPF JOURNEY</p><h2>Your account at a glance</h2><p>Keep track of the key steps that help your EPF account stay ready when you need it.</p></div><span class="panel-status"><span></span> Account active</span></div><div class="journey-statuses"><div class="journey-item"><span class="journey-icon complete">✓</span><div><strong>Profile</strong><small>Complete</small></div></div><div class="journey-item"><span class="journey-icon complete">✓</span><div><strong>KYC</strong><small>Verified</small></div></div><div class="journey-item"><span class="journey-icon pending">!</span><div><strong>e-Nomination</strong><small>Action needed</small></div></div><div class="journey-item"><span class="journey-icon neutral">—</span><div><strong>Claims</strong><small>No active claims</small></div></div></div><div class="next-step"><div><p class="eyebrow teal">NEXT BEST ACTION</p><h3>Complete your e-Nomination</h3><p>Add a nominee to help secure your family’s EPF benefits.</p></div><a href="#/dashboard" class="primary-button">Start e-Nomination →</a></div><div class="experience-footer"><span><b>●</b> Your account is active</span><span>Last updated today</span></div></section><section class="quick-actions" style="margin:0;padding:20px;"><div class="section-heading"><div><p class="eyebrow teal">COMMON SERVICES</p><h2>Quick actions</h2></div></div><div class="action-grid"><a class="action-card" href="#/dashboard"><span class="action-icon">◈</span><span><strong>PMVBRY</strong><small>Access your PMVBRY dashboard.</small></span><b>→</b></a><a class="action-card" href="#/passbook"><span class="action-icon">▤</span><span><strong>Passbook</strong><small>View contribution details.</small></span><b>→</b></a><a class="action-card" href="#/claims" data-guide-target="nav.claims"><span class="action-icon">▱</span><span><strong>File Claim</strong><small>Apply for eligible claims.</small></span><b>→</b></a><a class="action-card" href="#/claims"><span class="action-icon">⌕</span><span><strong>Track Claim</strong><small>Check claim status.</small></span><b>→</b></a><a class="action-card" href="#/dashboard"><span class="action-icon">✓</span><span><strong>e-Nomination</strong><small>Add nominee details.</small></span><b>→</b></a><a class="action-card" href="#/service-history"><span class="action-icon">◫</span><span><strong>Member Service History</strong><small>Review service history.</small></span><b>→</b></a></div></section></div><div class="dashboard-col-right" style="display:flex;flex-direction:column;gap:18px;"><aside class="profile-card"><div class="profile-top"><div class="avatar">DM</div><div><p class="eyebrow">MEMBER PROFILE</p><h2>Demo Member</h2><p>UAN: XXXX XXXX 4821</p></div></div><div class="completion"><div><span>Profile completion</span><strong>80%</strong></div><div class="progress"><span></span></div></div><a href="#/dashboard" class="profile-link">View profile <span>→</span></a></aside><aside class="profile-card claims-overview-card"><div class="profile-top" style="border-bottom:none; padding-bottom:5px"><div class="avatar" style="background:#eaf4fa;color:#075d80;font-size:18px">📄</div><div><p class="eyebrow teal" style="letter-spacing:1px; margin-bottom:2px">CLAIMS OVERVIEW</p><h2 style="font-size:16px; margin:0">No active claims</h2></div></div><div style="padding-top:0"><p style="color:var(--muted);font-size:13px;margin:5px 0 15px">You don't have any active claims at the moment.</p><a href="#/claims" style="font-size:13px;color:var(--ink);font-weight:bold;text-decoration:none">Go to Claims Hub <span>→</span></a></div></aside></div></div></div>`;
-const passbookView = () => `<div class="shell passbook-page"><div class="breadcrumb"><span>Member Portal</span><span>/</span><strong>Passbook</strong></div><header class="passbook-header"><div><p class="eyebrow teal">EPF ACCOUNT</p><h1>Passbook</h1><p>View your EPF contributions, withdrawals, and account balance.</p></div><label class="year-select">Financial year <select id="financialYear"><option value="2026">FY 2026–27</option><option value="2025">FY 2025–26</option></select></label></header><section class="balance-section"><div class="section-heading"><div><p class="eyebrow teal">CLOSING BALANCE</p><h2>Your EPF balance</h2></div><span class="updated-text" id="balanceDate"></span></div><div class="balance-grid" id="balanceGrid"></div></section><div class="passbook-grid"><section class="activity-summary"><p class="eyebrow teal">SELECTED YEAR</p><h2>Activity summary</h2><div class="activity-rows" id="activityRows"></div></section><section class="breakdown"><p class="eyebrow teal">CONTRIBUTION BREAKDOWN</p><h2>Where your contributions go</h2><p class="breakdown-note">For the selected financial year</p><div id="contributionBreakdown"></div></section></div><section class="recent-activity"><div class="section-heading"><div><p class="eyebrow teal">LATEST ENTRIES</p><h2>Recent activity</h2></div><span class="entry-count" id="entryCount"></span></div><div class="transaction-preview" id="transactionPreview"></div><div class="passbook-actions"><button class="primary-button" id="openPassbook">View Full Passbook →</button><button class="secondary-button" id="downloadSummary">Download PDF</button></div></section></div><section class="passbook-overlay" id="passbookOverlay" role="dialog" aria-modal="true" aria-labelledby="fullPassbookTitle" aria-hidden="true"><div class="full-passbook"><header class="full-passbook-header"><button class="back-button" id="closePassbook">← Back</button><div><p class="eyebrow">OFFICIAL MEMBER RECORD</p><h2 id="fullPassbookTitle">Full Passbook</h2><p id="fullPassbookMeta"></p></div><button class="secondary-button" id="downloadFull">Download PDF</button></header><p class="swipe-hint">Swipe horizontally to view all details →</p><div class="table-wrap"><table><thead><tr><th>Wage Month</th><th>Transaction Date</th><th>Transaction Type</th><th>Particulars</th><th>EPF Wages</th><th>EPS Wages</th><th>Employee Share</th><th>Employer Share</th><th>Pension Share</th></tr></thead><tbody id="fullPassbookRows"></tbody><tfoot id="fullPassbookTotals"></tfoot></table></div></div></section>`;
-const claimDetailView = claim => { const stages = ['Submitted', 'Under Review', 'Processing', 'Settled']; const stageMeta = ['19 Jul 2026', '20 Jul 2026', claim.status === 'Processing' ? 'Current stage' : claim.stage > 2 ? 'Completed' : 'Pending', claim.status === 'Settled' ? 'Completed' : 'Pending']; const stateText = claim.status === 'Requires Action' ? 'Additional information is required before this claim can continue.' : claim.status === 'Settled' ? 'Your claim has been settled successfully.' : 'Your claim has completed the initial review and is currently being processed for settlement. No action is required from you at this stage.'; return `<div class="shell claim-detail-page"><div class="breadcrumb"><span>Member Portal</span><span>/</span><a href="#/claims">Claims</a><span>/</span><strong>Claim Details</strong></div><a class="back-to-claims" href="#/claims">← Back to Claims</a><section class="claim-detail-hero"><div><p class="eyebrow teal">CLAIM DETAILS</p><h1>${claim.type}</h1><p>${claim.form}</p></div><span class="claim-status ${statusClass(claim.status)}"><b>●</b> ${claim.status}</span><div class="detail-hero-grid"><div><span>Claim reference</span><strong>${claim.reference}</strong></div><div><span>Submitted</span><strong>${claim.submitted}</strong></div><div><span>Claim amount</span><strong>${claim.amount}</strong></div><div><span>Current stage</span><strong>${claim.status}</strong></div></div></section>${claim.status === 'Requires Action' ? `<section class="action-required"><div><strong>Action required</strong><p>${claim.note}</p></div><button class="primary-button" id="requiredAction">View required action →</button></section>` : ''}<section class="claim-tracking" id="claimTracking" tabindex="-1"><div class="section-heading"><div><p class="eyebrow teal">CLAIM PROGRESS</p><h2>Track your claim</h2></div><span class="claim-status ${statusClass(claim.status)}"><b>●</b> ${claim.status}</span></div><ol class="detail-stepper">${stages.map((stage, index) => `<li class="${index < claim.stage ? 'complete' : index === claim.stage ? 'current' : ''}"><span>${index < claim.stage ? '✓' : index + 1}</span><div><strong>${stage}</strong><small>${stageMeta[index]}</small></div></li>`).join('')}</ol></section><section class="now-explainer"><h2>What’s happening now?</h2><p>${stateText}</p><div><strong>What happens next:</strong> ${claim.status === 'Requires Action' ? 'Submit the requested information so this claim can continue.' : claim.status === 'Settled' ? 'The settlement amount will be reflected in your account.' : 'Once processing is completed, the claim will move to settlement.'}</div></section><div class="claim-detail-grid"><section class="claim-activity"><p class="eyebrow teal">UPDATES</p><h2>Claim activity</h2><div class="activity-timeline">${claim.activity.map((item, index) => `<article class="${index === claim.activity.length - 1 ? 'latest' : ''}"><span></span><div><small>${item[0]}</small><h3>${item[1]}</h3><p>${item[2]}</p></div></article>`).join('')}</div></section><section class="claim-information"><p class="eyebrow teal">OFFICIAL RECORD</p><h2>Claim information</h2><dl><div><dt>Claim type</dt><dd>${claim.type}</dd></div><div><dt>Form</dt><dd>${claim.form}</dd></div><div><dt>Claim reference</dt><dd>${claim.reference}</dd></div><div><dt>Submitted on</dt><dd>${claim.submitted}</dd></div><div><dt>Claimed amount</dt><dd>${claim.amount}</dd></div><div><dt>Status</dt><dd>${claim.status}</dd></div></dl></section></div><section class="claim-documents"><div><p class="eyebrow teal">DOCUMENTS</p><h2>Claim acknowledgement</h2><p>Submitted ${claim.submitted}</p></div><button class="secondary-button" id="downloadAcknowledgement">Download</button></section></div>`; };
-const claimsView = () => `<div class="shell claims-page"><div class="breadcrumb"><span>Member Portal</span><span>/</span><strong>Claims</strong></div><header class="claims-header"><div><p class="eyebrow teal">EPF SERVICES</p><h1>Claims</h1><p>File, track, and manage your EPF claims.</p></div><button class="primary-button file-claim-button" data-guide-target="claim.start">+ File a Claim</button></header><section class="active-claim"><div class="active-claim-heading"><div><p class="eyebrow teal">CURRENT REQUEST</p><h2>Active claim</h2></div><span class="claim-status processing"><b>●</b> Processing</span></div><div class="claim-overview"><div><span>Claim type</span><strong>Final Settlement / Form 19</strong></div><div><span>Claim reference</span><strong>CLM-2026-04821</strong></div><div><span>Submitted</span><strong>19 July 2026</strong></div><div><span>Claim amount</span><strong>₹ 17,500</strong></div></div><ol class="claim-stepper"><li class="complete"><span>✓</span><strong>Submitted</strong></li><li class="complete"><span>✓</span><strong>Under Review</strong></li><li class="current"><span>3</span><strong>Processing</strong></li><li><span>4</span><strong>Settled</strong></li></ol><div class="claim-actions"><a href="#/claim/active" class="primary-button">View Claim Details</a><a href="#/claim/active?track" class="secondary-button">Track Claim</a></div></section><section class="claim-stat-grid"><article><span>Active</span><strong>1</strong></article><article><span>Settled</span><strong>3</strong></article><article><span>Total claimed</span><strong>₹ 42,500</strong></article></section><section class="recent-claims"><div class="section-heading"><div><p class="eyebrow teal">CLAIM ACTIVITY</p><h2>Recent claims</h2><p>Showing your most recent claims</p></div></div><div class="claim-list" id="claimList"></div><a href="#/claims" class="view-all-claims">View All Claim History →</a></section><section class="claim-guidance"><div><p class="eyebrow teal">GET STARTED</p><h2>Need to file a claim?</h2><p>Check your available claim options and submit a request based on your eligibility.</p></div><button class="secondary-button">Explore Claim Options →</button></section></div>`;
+let currentDemoAccount = 1; // 1 = Demo Member, 2 = Demo Member 2
+
+const dashboardView = () => {
+  const isDemo2 = currentDemoAccount === 2;
+  const memberName = isDemo2 ? 'Demo Member 2' : 'Demo Member';
+
+  const kycItem = isDemo2
+    ? `<div class="journey-item"><span class="journey-icon pending">!</span><div><strong data-i18n="dash.kyc">KYC</strong><small style="color:var(--orange-800)">PAN missing</small></div></div>`
+    : `<div class="journey-item"><span class="journey-icon complete">✓</span><div><strong data-i18n="dash.kyc">KYC</strong><small data-i18n="dash.verified">Verified</small></div></div>`;
+
+  return `<div class="shell"><div class="breadcrumb"><span>Member Portal</span><span>/</span><strong data-i18n="nav.dashboard">Dashboard</strong></div><div class="welcome-row"><div><p class="eyebrow" data-i18n="dash.eyebrow">MEMBER DASHBOARD</p><h1><span data-i18n="dash.greeting">Good morning</span>, ${memberName}</h1><p data-i18n="dash.intro">Here is a simple view of your EPF account and available services.</p></div><p class="last-login">Last login: 25 Aug 2026, 10:30 AM</p></div><div class="dashboard-grid"><div class="dashboard-col-left" style="display:flex;flex-direction:column;gap:18px;"><section class="primary-experience"><div class="panel-heading"><div><p class="eyebrow teal" data-i18n="dash.journey">MY EPF JOURNEY</p><h2 data-i18n="dash.journeyTitle">Your account at a glance</h2><p data-i18n="dash.journeyDesc">Keep track of the key steps that help your EPF account stay ready when you need it.</p></div><span class="panel-status"><span></span> <span data-i18n="dash.active">Account active</span></span></div><div class="journey-statuses"><div class="journey-item"><span class="journey-icon complete">✓</span><div><strong data-i18n="dash.profile">Profile</strong><small data-i18n="dash.complete">Complete</small></div></div>${kycItem}<div class="journey-item"><span class="journey-icon pending">!</span><div><strong data-i18n="dash.enom">e-Nomination</strong><small data-i18n="dash.actionNeeded">Action needed</small></div></div><div class="journey-item"><span class="journey-icon neutral">—</span><div><strong data-i18n="dash.claims">Claims</strong><small data-i18n="dash.noClaims">No active claims</small></div></div></div><div class="next-step"><div><p class="eyebrow teal" data-i18n="dash.nba">NEXT BEST ACTION</p><h3 data-i18n="dash.nbaTitle">Complete your e-Nomination</h3><p data-i18n="dash.nbaDesc">Add a nominee to help secure your family’s EPF benefits.</p></div><a href="#/dashboard" class="primary-button" data-i18n="dash.nbaBtn">Start e-Nomination →</a></div><div class="experience-footer"><span><b>●</b> <span data-i18n="dash.accountActive">Your account is active</span></span><span data-i18n="dash.lastUpdated">Last updated today</span></div></section><section class="quick-actions" style="margin:0;padding:20px;"><div class="section-heading"><div><p class="eyebrow teal" data-i18n="dash.services">COMMON SERVICES</p><h2 data-i18n="dash.quickActions">Quick actions</h2></div></div><div class="action-grid"><a class="action-card" href="#/dashboard"><span class="action-icon">◈</span><span><strong>PMVBRY</strong><small data-i18n="quick.pmvbryDesc">Access your PMVBRY dashboard.</small></span><b>→</b></a><a class="action-card" href="#/passbook"><span class="action-icon">▤</span><span><strong data-i18n="quick.passbook">Passbook</strong><small data-i18n="quick.passbookDesc">View contribution details.</small></span><b>→</b></a><a class="action-card" href="#/claims" data-guide-target="nav.claims"><span class="action-icon">▱</span><span><strong data-i18n="quick.claims">File Claim</strong><small data-i18n="quick.claimsDesc">Apply for eligible claims.</small></span><b>→</b></a><a class="action-card" href="#/claims"><span class="action-icon">⌕</span><span><strong data-i18n="quick.trackClaim">Track Claim</strong><small data-i18n="quick.trackClaimDesc">Check claim status.</small></span><b>→</b></a><a class="action-card" href="#/dashboard"><span class="action-icon">✓</span><span><strong data-i18n="dash.enom">e-Nomination</strong><small data-i18n="quick.enomDesc">Add nominee details.</small></span><b>→</b></a><a class="action-card" href="#/service-history"><span class="action-icon">◫</span><span><strong data-i18n="quick.service">Member Service History</strong><small data-i18n="quick.serviceDesc">Review service history.</small></span><b>→</b></a></div></section></div><div class="dashboard-col-right" style="display:flex;flex-direction:column;gap:18px;"><aside class="profile-card"><div class="profile-top"><div class="avatar">DM</div><div><p class="eyebrow" data-i18n="dash.memberProfile">MEMBER PROFILE</p><h2>${memberName}</h2><p>UAN: XXXX XXXX 4821</p></div></div><div class="completion"><div><span data-i18n="dash.profileComp">Profile completion</span><strong>${isDemo2 ? '65%' : '80%'}</strong></div><div class="progress"><span style="${isDemo2 ? 'width: 65%' : 'width: 80%'}"></span></div></div><a href="#/dashboard" class="profile-link"><span data-i18n="dash.viewProfile">View profile</span> <span>→</span></a></aside><aside class="profile-card claims-overview-card"><div class="profile-top" style="border-bottom:none; padding-bottom:5px"><div class="avatar" style="background:#eaf4fa;color:#075d80;font-size:18px">📄</div><div><p class="eyebrow teal" style="letter-spacing:1px; margin-bottom:2px" data-i18n="dash.claimsOverview">CLAIMS OVERVIEW</p><h2 style="font-size:16px; margin:0" data-i18n="dash.noActiveClaims">No active claims</h2></div></div><div style="padding-top:0"><p style="color:var(--muted);font-size:13px;margin:5px 0 15px" data-i18n="dash.noActiveClaimsDesc">You don't have any active claims at the moment.</p><a href="#/claims" style="font-size:13px;color:var(--ink);font-weight:bold;text-decoration:none"><span data-i18n="dash.goToClaims">Go to Claims Hub</span> <span>→</span></a></div></aside></div></div></div>`;
+};
+const passbookView = () => `<div class="shell passbook-page"><div class="breadcrumb"><span>${window.t('nav.memberPortal')}</span><span>/</span><strong data-i18n="nav.passbook">Passbook</strong></div><header class="passbook-header"><div><p class="eyebrow teal" data-i18n="passbook.epfAccount">EPF ACCOUNT</p><h1 data-i18n="passbook.title">Passbook</h1><p data-i18n="passbook.desc">View your EPF contributions, withdrawals, and account balance.</p></div><label class="year-select"><span data-i18n="passbook.fy">Financial year</span> <select id="financialYear"><option value="2026">FY 2026–27</option><option value="2025">FY 2025–26</option></select></label></header><section class="balance-section"><div class="section-heading"><div><p class="eyebrow teal" data-i18n="passbook.closingBalance">CLOSING BALANCE</p><h2 data-i18n="passbook.yourBalance">Your EPF balance</h2></div><span class="updated-text" id="balanceDate"></span></div><div class="balance-grid" id="balanceGrid"></div></section><div class="passbook-grid"><section class="activity-summary"><p class="eyebrow teal" data-i18n="passbook.selectedYear">SELECTED YEAR</p><h2 data-i18n="passbook.activity">Activity summary</h2><div class="activity-rows" id="activityRows"></div></section><section class="breakdown"><p class="eyebrow teal" data-i18n="passbook.breakdown">CONTRIBUTION BREAKDOWN</p><h2 data-i18n="passbook.whereContributions">Where your contributions go</h2><p class="breakdown-note" data-i18n="passbook.selectedYearNote">For the selected financial year</p><div id="contributionBreakdown"></div></section></div><section class="recent-activity"><div class="section-heading"><div><p class="eyebrow teal" data-i18n="passbook.latest">LATEST ENTRIES</p><h2 data-i18n="passbook.recent">Recent activity</h2></div><span class="entry-count" id="entryCount"></span></div><div class="transaction-preview" id="transactionPreview"></div><div class="passbook-actions"><button class="primary-button" id="openPassbook" data-i18n="passbook.viewFull">View Full Passbook →</button><button class="secondary-button" id="downloadSummary" data-i18n="passbook.downloadPdf">Download PDF</button></div></section></div><section class="passbook-overlay" id="passbookOverlay" role="dialog" aria-modal="true" aria-labelledby="fullPassbookTitle" aria-hidden="true"><div class="full-passbook"><header class="full-passbook-header"><button class="back-button" id="closePassbook" data-i18n="passbook.back">← Back</button><div><p class="eyebrow" data-i18n="passbook.official">OFFICIAL MEMBER RECORD</p><h2 id="fullPassbookTitle" data-i18n="passbook.fullPassbook">Full Passbook</h2><p id="fullPassbookMeta"></p></div><button class="secondary-button" id="downloadFull" data-i18n="passbook.downloadPdf">Download PDF</button></header><p class="swipe-hint" data-i18n="passbook.swipe">Swipe horizontally to view all details →</p><div class="table-wrap"><table><thead><tr><th data-i18n="passbook.wageMonth">Wage Month</th><th data-i18n="passbook.transDate">Transaction Date</th><th data-i18n="passbook.transType">Transaction Type</th><th data-i18n="passbook.particulars">Particulars</th><th data-i18n="passbook.epfWages">EPF Wages</th><th data-i18n="passbook.epsWages">EPS Wages</th><th data-i18n="passbook.employeeShare">Employee Share</th><th data-i18n="passbook.employerShare">Employer Share</th><th data-i18n="passbook.pensionShare">Pension Share</th></tr></thead><tbody id="fullPassbookRows"></tbody><tfoot id="fullPassbookTotals"></tfoot></table></div></div></section>`;
+const claimDetailView = claim => { const stages = [window.t('claims.stepSub'), window.t('claims.stepRev'), window.t('claims.stepPro'), window.t('claims.stepSet')]; const stageMeta = ['19 Jul 2026', '20 Jul 2026', claim.status === 'Processing' ? window.t('cd.currStage') : claim.stage > 2 ? window.t('dash.complete') : 'Pending', claim.status === 'Settled' ? window.t('dash.complete') : 'Pending']; const stateText = claim.status === 'Requires Action' ? window.t('cd.actionReq') : claim.status === 'Settled' ? 'Your claim has been settled successfully.' : 'Your claim has completed the initial review and is currently being processed for settlement. No action is required from you at this stage.'; return `<div class="shell claim-detail-page"><div class="breadcrumb"><span>${window.t('nav.memberPortal')}</span><span>/</span><a href="#/claims" data-i18n="claims.title">Claims</a><span>/</span><strong data-i18n="cd.details">Claim Details</strong></div><a class="back-to-claims" href="#/claims" data-i18n="cd.back">← Back to Claims</a><section class="claim-detail-hero"><div><p class="eyebrow teal" data-i18n="cd.hero">CLAIM DETAILS</p><h1>${claim.type}</h1><p>${claim.form}</p></div><span class="claim-status ${statusClass(claim.status)}"><b>●</b> ${claim.status}</span><div class="detail-hero-grid"><div><span data-i18n="claims.reference">Claim reference</span><strong>${claim.reference}</strong></div><div><span data-i18n="claims.submitted">Submitted</span><strong>${claim.submitted}</strong></div><div><span data-i18n="claims.amount">Claim amount</span><strong>${claim.amount}</strong></div><div><span data-i18n="cd.currStage">Current stage</span><strong>${claim.status}</strong></div></div></section>${claim.status === 'Requires Action' ? `<section class="action-required"><div><strong data-i18n="cd.actionReq">Action required</strong><p>${claim.note}</p></div><button class="primary-button" id="requiredAction" data-i18n="cd.viewAction">View required action →</button></section>` : ''}<section class="claim-tracking" id="claimTracking" tabindex="-1"><div class="section-heading"><div><p class="eyebrow teal" data-i18n="cd.progress">CLAIM PROGRESS</p><h2 data-i18n="cd.track">Track your claim</h2></div><span class="claim-status ${statusClass(claim.status)}"><b>●</b> ${claim.status}</span></div><ol class="detail-stepper">${stages.map((stage, index) => `<li class="${index < claim.stage ? 'complete' : index === claim.stage ? 'current' : ''}"><span>${index < claim.stage ? '✓' : index + 1}</span><div><strong>${stage}</strong><small>${stageMeta[index]}</small></div></li>`).join('')}</ol></section><section class="now-explainer"><h2 data-i18n="cd.whatsNow">What’s happening now?</h2><p>${stateText}</p><div><strong data-i18n="cd.whatsNext">What happens next:</strong> ${claim.status === 'Requires Action' ? 'Submit the requested information so this claim can continue.' : claim.status === 'Settled' ? 'The settlement amount will be reflected in your account.' : 'Once processing is completed, the claim will move to settlement.'}</div></section><div class="claim-detail-grid"><section class="claim-activity"><p class="eyebrow teal" data-i18n="cd.updates">UPDATES</p><h2 data-i18n="cd.claimAct">Claim activity</h2><div class="activity-timeline">${claim.activity.map((item, index) => `<article class="${index === claim.activity.length - 1 ? 'latest' : ''}"><span></span><div><small>${item[0]}</small><h3>${item[1]}</h3><p>${item[2]}</p></div></article>`).join('')}</div></section><section class="claim-information"><p class="eyebrow teal" data-i18n="cd.official">OFFICIAL RECORD</p><h2 data-i18n="cd.claimInfo">Claim information</h2><dl><div><dt data-i18n="claims.type">Claim type</dt><dd>${claim.type}</dd></div><div><dt data-i18n="cd.form">Form</dt><dd>${claim.form}</dd></div><div><dt data-i18n="claims.reference">Claim reference</dt><dd>${claim.reference}</dd></div><div><dt data-i18n="claims.submitted">Submitted on</dt><dd>${claim.submitted}</dd></div><div><dt data-i18n="claims.amount">Claimed amount</dt><dd>${claim.amount}</dd></div><div><dt data-i18n="cd.status">Status</dt><dd>${claim.status}</dd></div></dl></section></div><section class="claim-documents"><div><p class="eyebrow teal" data-i18n="cd.documents">DOCUMENTS</p><h2 data-i18n="cd.ack">Claim acknowledgement</h2><p><span data-i18n="claims.submitted">Submitted</span> ${claim.submitted}</p></div><button class="secondary-button" id="downloadAcknowledgement" data-i18n="cd.download">Download</button></section></div>`; };
+const claimsView = () => `<div class="shell claims-page"><div class="breadcrumb"><span>${window.t('nav.memberPortal')}</span><span>/</span><strong data-i18n="claims.title">Claims</strong></div><header class="claims-header"><div><p class="eyebrow teal" data-i18n="claims.epfServices">EPF SERVICES</p><h1 data-i18n="claims.title">Claims</h1><p data-i18n="claims.subtitle">File, track, and manage your EPF claims.</p></div><button class="primary-button file-claim-button" data-guide-target="claim.start">+ <span data-i18n="claims.fileNew">File a Claim</span></button></header><section class="active-claim"><div class="active-claim-heading"><div><p class="eyebrow teal" data-i18n="claims.currentReq">CURRENT REQUEST</p><h2 data-i18n="claims.activeClaim">Active claim</h2></div><span class="claim-status processing"><b>●</b> <span data-i18n="claims.processing">Processing</span></span></div><div class="claim-overview"><div><span data-i18n="claims.type">Claim type</span><strong>Final Settlement / Form 19</strong></div><div><span data-i18n="claims.reference">Claim reference</span><strong>CLM-2026-04821</strong></div><div><span data-i18n="claims.submitted">Submitted</span><strong>19 July 2026</strong></div><div><span data-i18n="claims.amount">Claim amount</span><strong>₹ 17,500</strong></div></div><ol class="claim-stepper"><li class="complete"><span>✓</span><strong data-i18n="claims.stepSub">Submitted</strong></li><li class="complete"><span>✓</span><strong data-i18n="claims.stepRev">Under Review</strong></li><li class="current"><span>3</span><strong data-i18n="claims.stepPro">Processing</strong></li><li><span>4</span><strong data-i18n="claims.stepSet">Settled</strong></li></ol><div class="claim-actions"><a href="#/claim/active" class="primary-button" data-i18n="claims.viewDetails">View Claim Details</a><a href="#/claim/active?track" class="secondary-button" data-i18n="claims.track">Track Claim</a></div></section><section class="claim-stat-grid"><article><span data-i18n="claims.statusActive">Active</span><strong>1</strong></article><article><span data-i18n="claims.statusSettled">Settled</span><strong>3</strong></article><article><span data-i18n="claims.totalClaimed">Total claimed</span><strong>₹ 42,500</strong></article></section><section class="recent-claims"><div class="section-heading"><div><p class="eyebrow teal" data-i18n="claims.activity">CLAIM ACTIVITY</p><h2 data-i18n="claims.recent">Recent claims</h2><p data-i18n="claims.showingRecent">Showing your most recent claims</p></div></div><div class="claim-list" id="claimList"></div><a href="#/claims" class="view-all-claims" data-i18n="claims.viewAll">View All Claim History →</a></section><section class="claim-guidance"><div><p class="eyebrow teal" data-i18n="claims.getStarted">GET STARTED</p><h2 data-i18n="claims.needToFile">Need to file a claim?</h2><p data-i18n="claims.checkAvailable">Check your available claim options and submit a request based on your eligibility.</p></div><button class="secondary-button" data-i18n="claims.explore">Explore Claim Options →</button></section></div>`;
 const claimTypes = [
   { name: 'PF Final Settlement', form: 'Form 19', text: 'Withdraw your eligible PF balance when you meet the applicable conditions.', amount: '₹ 17,500' },
   { name: 'Pension Withdrawal Benefit', form: 'Form 10C', text: 'Claim eligible pension withdrawal benefits.', amount: '₹ 8,200' },
@@ -83,67 +94,67 @@ function fileClaimView() {
   let content = '';
 
   if (stepName === 'Bank') {
-    content = `<h2>Confirm your bank account</h2><p>Before you file your claim, we need to verify the bank account linked to your EPFO record.</p>${aiHook('bank', 'Why do I need to verify this?')}${renderAiGuidance('bank', 'EPFO needs to confirm that the bank account you are entering matches the one currently associated with your UAN to prevent fraud and ensure successful transfer of funds.')}<div class="bank-verification-card">${!claimFlow.bankVerified ? `<label class="input-label">Account Number</label><input type="password" id="bankAccountInput" class="text-control w-full" value="${claimFlow.bankAccount}" placeholder="Enter account number" data-guide-target="claim.bankAccount"><button class="secondary-button mt-10" id="verifyBankBtn" ${claimFlow.verifyingBank ? 'disabled' : ''} data-guide-target="claim.verifyBank">${claimFlow.verifyingBank ? 'Verifying...' : 'Verify account'}</button>` : `<div class="verified-summary"><span class="verified-badge">✓ Bank account verified</span><strong>State Bank of India</strong><span>Account ending in ${claimFlow.bankAccount.slice(-4) || 'XXXX'}</span><small>IFSC: SBINXXXXXX</small></div>`}</div>`;
+    content = `<h2 data-i18n="step.bankTitle">Confirm your bank account</h2><p data-i18n="step.bankDesc">Before you file your claim, we need to verify the bank account linked to your EPFO record.</p>${aiHook('bank', 'Why do I need to verify this?')}${renderAiGuidance('bank', 'EPFO needs to confirm that the bank account you are entering matches the one currently associated with your UAN to prevent fraud and ensure successful transfer of funds.')}<div class="bank-verification-card">${!claimFlow.bankVerified ? `<label class="input-label" data-i18n="step.accNo">Account Number</label><input type="password" id="bankAccountInput" class="text-control w-full" value="${claimFlow.bankAccount}" placeholder="Enter account number" data-i18n-placeholder="step.accNo" data-guide-target="claim.bankAccount"><button class="secondary-button mt-10" id="verifyBankBtn" ${claimFlow.verifyingBank ? 'disabled' : ''} data-guide-target="claim.verifyBank">${claimFlow.verifyingBank ? window.t('file.submitting') : window.t('step.verifyAcc')}</button>` : `<div class="verified-summary"><span class="verified-badge">✓ <span data-i18n="step.bankVerified">Bank account verified</span></span><strong>State Bank of India</strong><span><span data-i18n="step.accEnding">Account ending in</span> ${claimFlow.bankAccount.slice(-4) || 'XXXX'}</span><small>IFSC: SBINXXXXXX</small></div>`}</div>`;
   } else if (stepName === 'Claim') {
     const lang = (typeof voiceEngine !== 'undefined' && voiceEngine.agentContext.language === 'hinglish') ? 'hinglish' : 'en';
     const explainer = claimTypeExplainer[lang];
     const infoModal = claimFlow.showInfo ? `<div class="claim-info-modal" style="background:var(--white); border:1px solid var(--gray-200); border-radius:8px; padding:16px; margin-bottom:16px; box-shadow:0 4px 12px rgba(0,0,0,0.1); position:relative"><button id="closeClaimInfo" style="position:absolute; top:12px; right:12px; background:none; border:none; font-size:18px; cursor:pointer" aria-label="Close information">✕</button><div style="font-size:14px; line-height:1.5">${explainer.text}</div><div style="margin-top:12px"><button class="secondary-button" id="readAloudBtn">🔊 Read aloud</button></div></div>` : '';
-    content = `<div style="position:relative"><h2>Select Claim Type <button id="claimInfoBtn" class="text-action" style="font-size:14px; margin-left:8px; border-radius:50%; width:20px; height:20px; border:1px solid currentColor; display:inline-flex; align-items:center; justify-content:center; text-decoration:none" title="Help me choose" aria-label="Help me choose">ℹ</button></h2><p>Choose the type of service that best matches your requirement.</p>${infoModal}${aiHook('claim_type', 'Not sure which claim applies to you?')}${renderAiGuidance('claim_type', 'Based on the information available, you have left employment and your account is active. PF Final Settlement (Form 19) may be relevant if you want to withdraw your full eligible PF balance.')}<div class="claim-type-grid">${claimTypes.map((x, i) => `<button class="claim-type-card ${claimFlow.selected === i ? 'selected' : ''}" data-type="${i}" data-guide-target="claim.type.${x.form.toLowerCase().replace(' ', '')}"><span>◇</span><strong>${x.name} <span class="form-badge">${x.form}</span></strong><small>${x.text}</small></button>`).join('')}</div></div>`;
+    content = `<div style="position:relative"><h2 data-i18n="step.claimTypeTitle">Select Claim Type <button id="claimInfoBtn" class="text-action" style="font-size:14px; margin-left:8px; border-radius:50%; width:20px; height:20px; border:1px solid currentColor; display:inline-flex; align-items:center; justify-content:center; text-decoration:none" title="Help me choose" aria-label="Help me choose">ℹ</button></h2><p data-i18n="step.claimTypeDesc">Choose the type of service that best matches your requirement.</p>${infoModal}${aiHook('claim_type', 'Not sure which claim applies to you?')}${renderAiGuidance('claim_type', 'Based on the information available, you have left employment and your account is active. PF Final Settlement (Form 19) may be relevant if you want to withdraw your full eligible PF balance.')}<div class="claim-type-grid">${claimTypes.map((x, i) => `<button class="claim-type-card ${claimFlow.selected === i ? 'selected' : ''}" data-type="${i}" data-guide-target="claim.type.${x.form.toLowerCase().replace(' ', '')}"><span>◇</span><strong>${x.name} <span class="form-badge">${x.form}</span></strong><small>${x.text}</small></button>`).join('')}</div></div>`;
   } else if (stepName === 'Details') { // Form 19
-    content = `<h2>Your claim</h2><p>Please review the details for your selected claim.</p><div class="flow-review"><div><span>Claim type</span><strong>${type.name}</strong><small>${type.form}</small></div><div><span>PAN</span><strong>XXXXX1234X</strong><small>Verified</small></div><div style="grid-column: 1 / -1"><span>Estimated eligible claim amount</span><strong class="large-amount d-block">${type.amount}</strong><small>The final amount may change during processing at the EPFO office.</small></div></div><div class="tax-info-card"><strong>Tax may apply to your settlement</strong><p>Based on your service period and claim amount, tax rules (TDS) may apply.</p>${aiHook('tax', 'Ask AI to explain')}${renderAiGuidance('tax', 'Since your service period is less than 5 years and the amount might exceed ₹50,000, TDS may be deducted. Providing your PAN helps keep this deduction at a lower rate.')}</div>`;
+    content = `<h2 data-i18n="step.reviewTitle">Your claim</h2><p data-i18n="step.reviewDesc">Please review the details for your selected claim.</p><div class="flow-review"><div><span data-i18n="claims.type">Claim type</span><strong>${type.name}</strong><small>${type.form}</small></div><div><span data-i18n="step.pan">PAN</span><strong>XXXXX1234X</strong><small data-i18n="dash.verified">Verified</small></div><div style="grid-column: 1 / -1"><span data-i18n="step.estEligible">Estimated eligible claim amount</span><strong class="large-amount d-block">${type.amount}</strong><small data-i18n="step.finalAmountNote">The final amount may change during processing at the EPFO office.</small></div></div><div class="tax-info-card"><strong data-i18n="step.taxApplies">Tax may apply to your settlement</strong><p data-i18n="step.taxDesc">Based on your service period and claim amount, tax rules (TDS) may apply.</p>${aiHook('tax', 'Ask AI to explain')}${renderAiGuidance('tax', 'Since your service period is less than 5 years and the amount might exceed ₹50,000, TDS may be deducted. Providing your PAN helps keep this deduction at a lower rate.')}</div>`;
   } else if (stepName === 'Eligibility') { // Form 10C & 31
     const form31 = type.form === 'Form 31';
-    content = `<h2>Eligibility check</h2><p>We've reviewed your account against the requirements for this claim.</p>
+    content = `<h2 data-i18n="step.eligibilityTitle">Eligibility check</h2><p data-i18n="step.eligibilityDesc">We've reviewed your account against the requirements for this claim.</p>
       <div class="flow-review">
-        <div><span class="status-badge active" style="margin-bottom:8px">Ready to continue ✓</span></div>
+        <div><span class="status-badge active" style="margin-bottom:8px" data-i18n="step.ready">Ready to continue ✓</span></div>
         ${form31 ? `
-          <div><span>Claim purpose selected</span><strong>${claimFlow.advanceReason}</strong></div>
-          <div><span>Service details reviewed</span><strong>Current employer active</strong></div>
-          <div><span>Eligible balance available</span><strong>₹ 1,12,000</strong></div>
+          <div><span data-i18n="step.purposeSelected">Claim purpose selected</span><strong>${claimFlow.advanceReason}</strong></div>
+          <div><span data-i18n="step.serviceRev">Service details reviewed</span><strong>Current employer active</strong></div>
+          <div><span data-i18n="step.eligibleBal">Eligible balance available</span><strong>₹ 1,12,000</strong></div>
         ` : `
-          <div><span>Identity verified</span><strong>Aadhaar linked</strong></div>
-          <div><span>Bank account available</span><strong>Verified</strong></div>
-          <div><span>Service records</span><strong>Minimum 6 months completed</strong></div>
+          <div><span data-i18n="step.idVer">Identity verified</span><strong>Aadhaar linked</strong></div>
+          <div><span data-i18n="step.bankAvail">Bank account available</span><strong data-i18n="dash.verified">Verified</strong></div>
+          <div><span data-i18n="step.serviceRec">Service records</span><strong>Minimum 6 months completed</strong></div>
         `}
       </div>`;
   } else if (stepName === 'Pension') { // Form 10C
-    content = `<h2>Review pension claim</h2><p>Please review your service details for the Pension Withdrawal Benefit.</p><div class="flow-review"><div><span>Claim type</span><strong>${type.name}</strong><small>${type.form}</small></div><div><span>Service period</span><strong>3 years, 2 months</strong></div><div style="grid-column: 1 / -1"><span>Estimated eligible amount</span><strong class="large-amount d-block">${type.amount}</strong><small>Final amount is subject to verification and processing.</small></div></div>`;
+    content = `<h2 data-i18n="step.pensionTitle">Review pension claim</h2><p data-i18n="step.pensionDesc">Please review your service details for the Pension Withdrawal Benefit.</p><div class="flow-review"><div><span data-i18n="claims.type">Claim type</span><strong>${type.name}</strong><small>${type.form}</small></div><div><span data-i18n="step.servicePeriod">Service period</span><strong>3 years, 2 months</strong></div><div style="grid-column: 1 / -1"><span data-i18n="step.estEligible">Estimated eligible amount</span><strong class="large-amount d-block">${type.amount}</strong><small data-i18n="step.finalAmountNote">Final amount is subject to verification and processing.</small></div></div>`;
   } else if (stepName === 'Reason') { // Form 31
     const reasons = ['Medical treatment', 'Education', 'Marriage', 'Housing-related purpose'];
-    content = `<h2>Choose the reason for advance</h2><p>The selected purpose determines what the system checks and what information may be required.</p>
+    content = `<h2 data-i18n="step.reasonTitle">Choose the reason for advance</h2><p data-i18n="step.reasonDesc">The selected purpose determines what the system checks and what information may be required.</p>
       <div class="claim-type-grid">
         ${reasons.map(r => `<button class="claim-type-card ${claimFlow.advanceReason === r ? 'selected' : ''}" data-reason="${r}" data-guide-target="claim.reason"><strong>${r}</strong><small>We’ll check your available records and eligibility before you submit your request.</small></button>`).join('')}
       </div>`;
   } else if (stepName === 'Amount') { // Form 31
-    content = `<h2>Claim amount</h2><p>The maximum eligible amount depends on your claim purpose and EPFO rules.</p>
+    content = `<h2 data-i18n="step.amountTitle">Claim amount</h2><p data-i18n="step.amountDesc">The maximum eligible amount depends on your claim purpose and EPFO rules.</p>
       <div class="flow-review mb-20">
-        <div><span>Available PF balance</span><strong>₹ 1,12,000</strong></div>
-        <div><span>Estimated maximum available</span><strong>Up to ${type.amount}</strong></div>
+        <div><span data-i18n="step.availBal">Available PF balance</span><strong>₹ 1,12,000</strong></div>
+        <div><span data-i18n="step.estMax">Estimated maximum available</span><strong>Up to ${type.amount}</strong></div>
       </div>
-      <label class="input-label">How much would you like to claim?</label>
+      <label class="input-label" data-i18n="step.howMuch">How much would you like to claim?</label>
       <div class="input-with-icon" style="position:relative">
         <span style="position:absolute; left:12px; top:10px; font-weight:bold; color:var(--ink)">₹</span>
-        <input type="number" id="advanceAmountInput" class="text-control w-full" style="padding-left:28px" value="${claimFlow.advanceAmount}" placeholder="Enter amount" data-guide-target="claim.amount">
+        <input type="number" id="advanceAmountInput" class="text-control w-full" style="padding-left:28px" value="${claimFlow.advanceAmount}" placeholder="Enter amount" data-i18n-placeholder="step.enterAmount" data-guide-target="claim.amount">
       </div>
       ${claimFlow.advanceAmount && Number(claimFlow.advanceAmount) <= 10000 ? `<small style="color:var(--teal-700); font-weight:bold; display:block; margin-top:8px">✓ Amount is within the estimated eligible limit</small>` : claimFlow.advanceAmount ? `<small style="color:#d9534f; font-weight:bold; display:block; margin-top:8px">⚠️ The amount entered is higher than the estimated eligible limit.</small>` : ''}
     `;
   } else if (stepName === 'Review') { // Form 31
-    content = `<h2>Review details</h2><p>Please review the details for your PF Advance claim.</p>
+    content = `<h2 data-i18n="step.reviewAdvanceTitle">Review details</h2><p data-i18n="step.reviewAdvanceDesc">Please review the details for your PF Advance claim.</p>
       <div class="flow-review">
-        <div><span>Claim type</span><strong>${type.name} (${type.form})</strong></div>
-        <div><span>Reason</span><strong>${claimFlow.advanceReason}</strong></div>
-        <div><span>Requested amount</span><strong class="large-amount d-block">₹ ${claimFlow.advanceAmount}</strong></div>
-        <div style="grid-column: 1 / -1"><span>Estimated eligible limit: ${type.amount}</span><small>Final eligibility and amount may be determined during EPFO processing.</small></div>
+        <div><span data-i18n="claims.type">Claim type</span><strong>${type.name} (${type.form})</strong></div>
+        <div><span data-i18n="step.reason">Reason</span><strong>${claimFlow.advanceReason}</strong></div>
+        <div><span data-i18n="step.reqAmount">Requested amount</span><strong class="large-amount d-block">₹ ${claimFlow.advanceAmount}</strong></div>
+        <div style="grid-column: 1 / -1"><span data-i18n="step.estLimit">Estimated eligible limit</span>: ${type.amount}<small data-i18n="step.finalAmountNote">Final eligibility and amount may be determined during EPFO processing.</small></div>
       </div>`;
   } else if (stepName === 'Address') {
-    content = `<h2>Confirm your address</h2><p>We found these details in your EPFO profile. Please review them before continuing.</p>${aiHook('address', 'Why do I need to confirm this?')}${renderAiGuidance('address', 'Your address is required for official correspondence and record keeping. We prefill this from your profile to save you time.')}<div class="address-card"><div class="address-details"><div><strong>Locality:</strong> <span>Demo Locality, Phase 1</span></div><div><strong>City:</strong> <span>Demo City</span></div><div><strong>State:</strong> <span>Demo State</span></div><div><strong>PIN:</strong> <span>400001</span></div></div><label class="ack mt-10"><input type="checkbox" id="confirmAddress" ${claimFlow.addressConfirmed ? 'checked' : ''} data-guide-target="claim.address.confirm"> I confirm my address is correct.</label></div>`;
+    content = `<h2 data-i18n="step.addressTitle">Confirm your address</h2><p data-i18n="step.addressDesc">We found these details in your EPFO profile. Please review them before continuing.</p>${aiHook('address', 'Why do I need to confirm this?')}${renderAiGuidance('address', 'Your address is required for official correspondence and record keeping. We prefill this from your profile to save you time.')}<div class="address-card"><div class="address-details"><div><strong data-i18n="step.locality">Locality:</strong> <span>Demo Locality, Phase 1</span></div><div><strong data-i18n="step.city">City:</strong> <span>Demo City</span></div><div><strong data-i18n="step.state">State:</strong> <span>Demo State</span></div><div><strong data-i18n="step.pin">PIN:</strong> <span>400001</span></div></div><label class="ack mt-10"><input type="checkbox" id="confirmAddress" ${claimFlow.addressConfirmed ? 'checked' : ''} data-guide-target="claim.address.confirm"> <span data-i18n="step.confAddress">I confirm my address is correct.</span></label></div>`;
   } else if (stepName === 'Declarations') {
-    content = `<h2>Review and confirm</h2><p>Please complete the required declarations.</p><div class="declaration-section"><strong>1. Confirm your information</strong><p class="declaration-text">I confirm that I have carefully reviewed the details associated with my EPFO claim and that the required information is correct.</p><label class="ack"><input type="checkbox" id="agreeInfo" ${claimFlow.agreedInfo ? 'checked' : ''} data-guide-target="claim.declaration.info"> I confirm the above information.</label></div><div class="declaration-section" style="border:0"><strong>2. Consent to Aadhaar-based authentication</strong><p class="declaration-text">EPFO requires identity verification before your claim can be submitted.</p>${aiHook('consent', 'What am I agreeing to?')}${renderAiGuidance('consent', 'You are allowing EPFO to use your Aadhaar number to verify your identity through a One-Time Password (OTP). This is securely processed and replaces physical signatures.')}<label class="ack mt-10"><input type="checkbox" id="agreeAadhaar" ${claimFlow.agreedAadhaar ? 'checked' : ''} data-guide-target="claim.declaration.aadhaar"> I consent to the required Aadhaar-based authentication process for establishing my identity and submitting this claim.</label></div>`;
+    content = `<h2 data-i18n="step.decTitle">Review and confirm</h2><p data-i18n="step.decDesc">Please complete the required declarations.</p><div class="declaration-section"><strong data-i18n="step.confInfoTitle">1. Confirm your information</strong><p class="declaration-text" data-i18n="step.confInfoDesc">I confirm that I have carefully reviewed the details associated with my EPFO claim and that the required information is correct.</p><label class="ack"><input type="checkbox" id="agreeInfo" ${claimFlow.agreedInfo ? 'checked' : ''} data-guide-target="claim.declaration.info"> <span data-i18n="step.confInfoAck">I confirm the above information.</span></label></div><div class="declaration-section" style="border:0"><strong data-i18n="step.consentTitle">2. Consent to Aadhaar-based authentication</strong><p class="declaration-text" data-i18n="step.consentDesc">EPFO requires identity verification before your claim can be submitted.</p>${aiHook('consent', 'What am I agreeing to?')}${renderAiGuidance('consent', 'You are allowing EPFO to use your Aadhaar number to verify your identity through a One-Time Password (OTP). This is securely processed and replaces physical signatures.')}<label class="ack mt-10"><input type="checkbox" id="agreeAadhaar" ${claimFlow.agreedAadhaar ? 'checked' : ''} data-guide-target="claim.declaration.aadhaar"> <span data-i18n="step.consentAck">I consent to the required Aadhaar-based authentication process for establishing my identity and submitting this claim.</span></label></div>`;
   } else if (stepName === 'OTP') {
-    content = `<h2>Verify your identity</h2><p>We'll send a one-time password to the mobile number registered for Aadhaar authentication.</p><div class="otp-card"><strong class="phone-number">+91 •••••• 4821</strong>${!claimFlow.otpSent ? `<button class="secondary-button" id="sendOtpBtn" data-guide-target="claim.otp.send">Send OTP</button>` : `<label class="input-label">Enter the 6-digit code</label><input type="text" id="otpInput" class="text-control w-full" value="${claimFlow.otpValue}" placeholder="XXXXXX" maxlength="6" data-guide-target="claim.otp.input"><small class="resend-timer mt-10">Resend available in 00:43</small>`}</div>${aiHook('otp', "Didn't receive the OTP?")}${renderAiGuidance('otp', 'It may take up to a minute for the OTP to arrive. If you still do not receive it, ensure your mobile is connected to the network, or you can request a resend when the timer expires.')}`;
+    content = `<h2><span data-i18n="form.verifyTitle">Verify your identity</span></h2><p data-i18n="form.verifyDesc">We'll send a one-time password to the mobile number registered for Aadhaar authentication.</p><div class="otp-card"><strong class="phone-number">+91 •••••• 4821</strong>${!claimFlow.otpSent ? `<button class="secondary-button" id="sendOtpBtn" data-guide-target="claim.otp.send"><span data-i18n="form.sendOtp">Send OTP</span></button>` : `<label class="input-label" data-i18n="form.enterOtp">Enter the 6-digit code</label><input type="text" id="otpInput" class="text-control w-full" value="${claimFlow.otpValue}" placeholder="XXXXXX" maxlength="6" data-guide-target="claim.otp.input"><small class="resend-timer mt-10">Resend available in 00:43</small>`}</div>${aiHook('otp', "Didn't receive the OTP?")}${renderAiGuidance('otp', 'It may take up to a minute for the OTP to arrive. If you still do not receive it, ensure your mobile is connected to the network, or you can request a resend when the timer expires.')}`;
   } else if (stepName === 'Submit') {
-    const amountHtml = type.form === 'Form 31' ? `<strong>Requested amount</strong><span class="large-amount d-block">₹ ${claimFlow.advanceAmount}</span>` : `<strong>Estimated eligible amount</strong><span class="large-amount d-block">${type.amount}</span>`;
-    content = `<h2>Ready to submit</h2><p>Review your claim summary.</p><div class="flow-confirm"><span><strong>Claim</strong><br>${type.name} (${type.form})</span><span><strong>Bank account</strong><br>Verified ✓</span>${type.form !== 'Form 31' ? `<span><strong>Address</strong><br>Confirmed ✓</span>` : `<span><strong>Reason</strong><br>${claimFlow.advanceReason}</span>`}<span><strong>Authentication</strong><br>OTP verified ✓</span><span><strong>Declarations</strong><br>Completed ✓</span><div style="grid-column: 1 / -1; padding-top:15px; margin-top:15px; border-top:1px solid #dce4e1;">${amountHtml}<small>Final amount may change during processing.</small></div></div>`;
+    const amountHtml = type.form === 'Form 31' ? `<strong data-i18n="step.reqAmount">Requested amount</strong><span class="large-amount d-block">₹ ${claimFlow.advanceAmount}</span>` : `<strong data-i18n="step.estEligible">Estimated eligible amount</strong><span class="large-amount d-block">${type.amount}</span>`;
+    content = `<h2 data-i18n="step.submitTitle">Ready to submit</h2><p data-i18n="step.submitDesc">Review your claim summary.</p><div class="flow-confirm"><span><strong><span data-i18n="claims.title">Claim</span></strong><br>${type.name} (${type.form})</span><span><strong><span data-i18n="step.bankAvail">Bank account</span></strong><br><span data-i18n="dash.verified">Verified</span> ✓</span>${type.form !== 'Form 31' ? `<span><strong><span data-i18n="step.addressTitle">Address</span></strong><br>Confirmed ✓</span>` : `<span><strong><span data-i18n="step.reason">Reason</span></strong><br>${claimFlow.advanceReason}</span>`}<span><strong><span data-i18n="step.auth">Authentication</span></strong><br>OTP verified ✓</span><span><strong><span data-i18n="step.decs">Declarations</span></strong><br>Completed ✓</span><div style="grid-column: 1 / -1; padding-top:15px; margin-top:15px; border-top:1px solid #dce4e1;">${amountHtml}<small data-i18n="step.finalAmountNote">Final amount may change during processing.</small></div></div>`;
   }
 
   const isStep1Disabled = stepName === 'Bank' && !claimFlow.bankVerified;
@@ -155,9 +166,9 @@ function fileClaimView() {
   const isStep6Disabled = stepName === 'OTP' && claimFlow.otpValue.length !== 6;
 
   const btnDisabled = (isStep1Disabled || isStep2Disabled || isStepReasonDisabled || isStepAmountDisabled || isStep4Disabled || isStep5Disabled || isStep6Disabled || claimFlow.submitting) ? 'disabled' : '';
-  const btnText = claimFlow.submitting ? 'Submitting...' : (stepName === 'Submit' ? 'Validate & Submit Claim' : 'Continue');
+  const btnText = claimFlow.submitting ? window.t('file.submitting') : (stepName === 'Submit' ? window.t('file.submitBtn') : window.t('file.continue'));
 
-  return `<div class="shell claim-flow-page"><div class="breadcrumb"><span>Member Portal</span><span>/</span><a href="#/claims">Claims</a><span>/</span><strong>File a Claim</strong></div><a class="back-to-claims" href="#/claims">← Back to Claims Hub</a><header><p class="eyebrow teal">GUIDED CLAIM SERVICE</p><h1>File a Claim</h1><p>Choose the service you need and we'll guide you through the process.</p></header>${stepsHtml}<section class="flow-content">${content}</section><div class="flow-actions">${claimFlow.step > 1 ? '<button class="secondary-button" id="flowBack">Back</button>' : '<span></span>'}<button class="primary-button" id="flowContinue" ${btnDisabled} data-guide-target="claim.continue">${btnText}</button></div></div>`;
+  return `<div class="shell claim-flow-page"><div class="breadcrumb"><span>${window.t('nav.memberPortal')}</span><span>/</span><a href="#/claims" data-i18n="claims.title">Claims</a><span>/</span><strong data-i18n="file.fileClaim">File a Claim</strong></div><a class="back-to-claims" href="#/claims" data-i18n="claims.backToHub">← Back to Claims Hub</a><header><p class="eyebrow teal" data-i18n="file.guided">GUIDED CLAIM SERVICE</p><h1 data-i18n="file.fileClaim">File a Claim</h1><p data-i18n="file.chooseService">Choose the service you need and we'll guide you through the process.</p></header>${stepsHtml}<section class="flow-content">${content}</section><div class="flow-actions">${claimFlow.step > 1 ? `<button class="secondary-button" id="flowBack" data-i18n="file.back">Back</button>` : '<span></span>'}<button class="primary-button" id="flowContinue" ${btnDisabled} data-guide-target="claim.continue">${btnText}</button></div></div>`;
 }
 
 function successView() {
@@ -223,6 +234,18 @@ function bindFlow() {
   document.querySelector('#flowBack')?.addEventListener('click', () => { claimFlow.step--; claimFlow.activeAi = null; renderRoute(); });
   document.querySelector('#flowContinue')?.addEventListener('click', () => {
     if (claimFlow.submitting) return;
+
+    if (claimFlow.step === 2 && currentDemoAccount === 2) {
+      // Show prerequisite blocking modal for Demo Member 2
+      const popup = document.getElementById('prerequisitePopup');
+      const overlay = document.getElementById('prerequisitePopupOverlay');
+      if (popup && overlay) {
+        popup.style.display = 'block';
+        overlay.style.display = 'block';
+      }
+      return; // Stop progression without breaking state
+    }
+
     if (guideState.journeyId === 'file_form31_claim') {
       console.log(`[Form31 Guide] Continue target clicked`);
       console.log(`[Form31 Guide] Advancing from step ${claimFlow.step}`);
@@ -333,7 +356,7 @@ function serviceHistoryView() {
           <p>See your employment journey, EPF service periods, and account details in one place.</p>
         </div>
       </header>
-      
+
       <div class="service-history-grid">
         <div class="timeline-column">
           <section class="service-summary">
@@ -352,7 +375,7 @@ function serviceHistoryView() {
             ${records}
           </section>
         </div>
-        
+
         <aside class="ai-column">
           <div class="ai-context-panel">
             <p class="eyebrow teal">UNDERSTAND YOUR SERVICE</p>
@@ -395,13 +418,16 @@ function bindServiceHistory() {
   });
 }
 
-function renderRoute() { const rawRoute = location.hash.replace('#/', '') || 'dashboard'; const [route, query] = rawRoute.split('?'); const claimId = route.startsWith('claim/') ? route.split('/')[1] : null; const claim = claims.find(item => item.id === claimId) || claims[0]; app.innerHTML = route === 'passbook' ? passbookView() : route === 'claims' ? claimsView() : route === 'file-claim' ? fileClaimView() : route === 'claim-success' && claimFlow.submitted ? successView() : route === 'service-history' ? serviceHistoryView() : claimId ? claimDetailView(claim) : dashboardView(); document.querySelector('.nav-home').classList.toggle('active', route === 'dashboard'); if (route === 'passbook') bindPassbook(); if (route === 'claims' || route === 'file-claim') bindFlow(); if (route === 'claims') bindClaims(); if (route === 'service-history') bindServiceHistory(); if (claimId) bindClaimDetails(query === 'track'); if (mobileMenu.classList.contains('open')) setMobileMenu(false); if (route === 'dashboard') checkWelcomeMessage(); }
+function renderRoute() { const rawRoute = location.hash.replace('#/', '') || 'dashboard'; const [route, query] = rawRoute.split('?'); const claimId = route.startsWith('claim/') ? route.split('/')[1] : null; const claim = claims.find(item => item.id === claimId) || claims[0]; app.innerHTML = route === 'passbook' ? passbookView() : route === 'claims' ? claimsView() : route === 'file-claim' ? fileClaimView() : route === 'claim-success' && claimFlow.submitted ? successView() : route === 'service-history' ? serviceHistoryView() : claimId ? claimDetailView(claim) : dashboardView(); document.querySelector('.nav-home').classList.toggle('active', route === 'dashboard'); if (route === 'passbook') bindPassbook(); if (route === 'claims' || route === 'file-claim') bindFlow(); if (route === 'claims') bindClaims(); if (route === 'service-history') bindServiceHistory(); if (claimId) bindClaimDetails(query === 'track'); if (mobileMenu.classList.contains('open')) setMobileMenu(false); if (route === 'dashboard') checkWelcomeMessage(); window.applyTranslations?.(); }
 const menuToggle = document.querySelector('#menuToggle'); const mobileMenu = document.querySelector('#mobileMenu'); const backdrop = document.querySelector('#menuBackdrop'); const setMobileMenu = open => { mobileMenu.classList.toggle('open', open); backdrop.classList.toggle('open', open); mobileMenu.setAttribute('aria-hidden', String(!open)); menuToggle.setAttribute('aria-expanded', String(open)); if (open) document.querySelector('#closeMenu').focus(); }; menuToggle.addEventListener('click', () => setMobileMenu(!mobileMenu.classList.contains('open'))); document.querySelector('#closeMenu').addEventListener('click', () => setMobileMenu(false)); backdrop.addEventListener('click', () => setMobileMenu(false)); document.addEventListener('keydown', e => { if (e.key === 'Escape') { const overlay = document.querySelector('#passbookOverlay'); if (overlay?.classList.contains('open')) { overlay.classList.remove('open'); document.body.classList.remove('modal-open'); } else setMobileMenu(false); } }); window.addEventListener('hashchange', renderRoute); if (!location.hash) location.hash = '#/dashboard'; else renderRoute();
 
-// PLACEHOLDER LANGUAGE DROPDOWN LOGIC
+// MULTILINGUAL DROPDOWN LOGIC
 const langToggleBtn = document.getElementById('langToggleBtn');
 const langDropdown = document.getElementById('langDropdown');
 const langSecondary = document.getElementById('langSecondary');
+const langPrimary = document.querySelector('.lang-primary');
+const langMap = { 'తెలుగు': 'te', 'ಕನ್ನಡ': 'kn', 'हिन्दी': 'hi', 'English': 'en' };
+
 if (langToggleBtn && langDropdown) {
   langToggleBtn.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -413,8 +439,23 @@ if (langToggleBtn && langDropdown) {
   langDropdown.querySelectorAll('button').forEach(btn => {
     btn.addEventListener('click', () => {
       if (langSecondary) langSecondary.textContent = btn.textContent;
+      if (window.setLanguage) window.setLanguage(langMap[btn.textContent] || 'en');
     });
   });
+  if (langPrimary) {
+    langPrimary.style.cursor = 'pointer';
+    langPrimary.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (window.setLanguage) window.setLanguage('en');
+    });
+  }
+  if (langSecondary) {
+    langSecondary.style.cursor = 'pointer';
+    langSecondary.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (window.setLanguage) window.setLanguage(langMap[langSecondary.textContent] || 'te');
+    });
+  }
 }
 
 // ONE-TIME NATIVE GEOLOCATION REQUEST
@@ -481,6 +522,60 @@ const initLangPopup = () => {
   overlay.addEventListener('click', closePopup);
 };
 initLangPopup();
+
+// ACCOUNT SWITCHER & PREREQUISITE POPUP LOGIC
+const initDemoAccountSwitcher = () => {
+  const accountSelect = document.getElementById('demoAccountSelect');
+  if (!accountSelect) return;
+
+  accountSelect.addEventListener('change', (e) => {
+    currentDemoAccount = Number(e.target.value);
+
+    // Update header Name and UAN
+    const headerName = document.getElementById('headerMemberName');
+    const headerUan = document.getElementById('headerUan');
+    if (headerName) headerName.textContent = currentDemoAccount === 2 ? 'Demo Member 2' : 'Demo Member';
+    if (headerUan) headerUan.textContent = currentDemoAccount === 2 ? 'UAN: XXXX XXXX 5932' : 'UAN: XXXX XXXX 4821';
+
+    // Reset claim flow state so no bleed-over
+    claimFlow.step = 1;
+    claimFlow.selected = null;
+    claimFlow.submitting = false;
+
+    // Ensure popup is closed
+    const popup = document.getElementById('prerequisitePopup');
+    const overlay = document.getElementById('prerequisitePopupOverlay');
+    if (popup) popup.style.display = 'none';
+    if (overlay) overlay.style.display = 'none';
+
+    // Re-render current route to reflect new state
+    renderRoute();
+  });
+};
+initDemoAccountSwitcher();
+
+const initPrerequisitePopup = () => {
+  const popup = document.getElementById('prerequisitePopup');
+  const overlay = document.getElementById('prerequisitePopupOverlay');
+  const closeBtn = document.getElementById('closePrerequisiteBtn');
+  const goBtn = document.getElementById('goToKycBtn');
+
+  if (!popup || !overlay) return;
+
+  const closePopup = () => {
+    popup.style.display = 'none';
+    overlay.style.display = 'none';
+  };
+
+  closeBtn?.addEventListener('click', closePopup);
+  overlay?.addEventListener('click', closePopup);
+
+  goBtn?.addEventListener('click', () => {
+    alert("Demo Simulation: Redirecting to KYC Portal...");
+    closePopup();
+  });
+};
+initPrerequisitePopup();
 function checkWelcomeMessage() {
   if (sessionStorage.getItem('epfoWelcomePlayed')) return;
 
@@ -811,15 +906,15 @@ const guideEngine = {
           </div>
           <div class="ai-guide-panel-footer desktop-only-footer">
             <div class="ai-input-wrapper">
-              <input type="text" placeholder="Type your message..." disabled>
+              <input type="text" placeholder="Type your message..." data-i18n-placeholder="chat.typeMsg" disabled>
               <button class="ai-dummy-mic">🎙️</button>
             </div>
-            <small class="ai-mic-hint">🎙️ Click mic to speak</small>
+            <small class="ai-mic-hint">🎙️ <span data-i18n="chat.clickMic">Click mic to speak</span></small>
           </div>
         </div>
         <div class="ai-guide-controls">
           <button class="ai-voice-fab" id="aiVoiceFab" title="Voice Guide">🎙️</button>
-          <button class="ai-guide-fab" id="aiGuideFab">✨ Ask EPFO Guide</button>
+          <button class="ai-guide-fab" id="aiGuideFab">✨ <span data-i18n="chat.askGuide">Ask EPFO Guide</span></button>
         </div>
       </div>
       <div class="ai-spotlight-overlay" id="aiSpotlightOverlay"></div>
@@ -833,8 +928,8 @@ const guideEngine = {
         <div class="ai-bubble-header">
           <span id="aiBubbleStep">Step 1 of X</span>
           <div class="ai-bubble-controls">
-            <button id="aiBubblePause">⏸ Pause</button>
-            <button id="aiBubbleStop">✕ Stop</button>
+            <button id="aiBubblePause" data-i18n="chat.pause">⏸ Pause</button>
+            <button id="aiBubbleStop" data-i18n="chat.stop">✕ Stop</button>
           </div>
         </div>
         <div class="ai-bubble-content" id="aiBubbleContent"></div>
@@ -1513,3 +1608,214 @@ const checkDemoWarning = () => {
 window.addEventListener('hashchange', checkDemoWarning);
 // Check on initial load too
 setTimeout(checkDemoWarning, 0);
+
+// ==========================================
+// FEATURE: IDLE HELP REMINDER
+// ==========================================
+
+const IDLE_HELP_DELAY = 7000;         // ms before showing the reminder
+const IDLE_HELP_COOLDOWN = 30000;     // ms before it can fire again
+const IDLE_HELP_AUTO_DISMISS = 9000;  // ms before popup auto-dismisses
+
+const idleHelp = {
+  _timer: null,
+  _autoDismissTimer: null,
+  _highlightTimer: null,
+  _lastFired: 0,
+  _popupEl: null,
+
+  // ---- Guards ----
+
+  canShow() {
+    // Guide actively guiding
+    if (typeof guideState !== 'undefined' && guideState.isActive) return false;
+    // Voice recording active
+    if (typeof voiceEngine !== 'undefined' && voiceEngine.isRecording) return false;
+    // Speech synthesis speaking (welcome message / TTS ongoing)
+    if (window.speechSynthesis && window.speechSynthesis.speaking) return false;
+    // Chat panel is open and user is interacting with it
+    const panel = document.getElementById('aiGuidePanel');
+    if (panel && panel.classList.contains('open') && guideState.isOpen) return false;
+    // Prerequisite modal is visible
+    const prereqPopup = document.getElementById('prerequisitePopup');
+    if (prereqPopup && prereqPopup.style.display !== 'none') return false;
+    // Lang popup is visible
+    const langPopup = document.getElementById('langInfoPopup');
+    if (langPopup && langPopup.style.display !== 'none') return false;
+    // Cooldown not yet elapsed
+    if (Date.now() - this._lastFired < IDLE_HELP_COOLDOWN) return false;
+    return true;
+  },
+
+  // ---- Timer management ----
+
+  resetTimer() {
+    clearTimeout(this._timer);
+    this._timer = setTimeout(() => this.show(), IDLE_HELP_DELAY);
+  },
+
+  stopTimer() {
+    clearTimeout(this._timer);
+    this._timer = null;
+  },
+
+  // ---- Highlight helpers ----
+
+  addHighlight() {
+    const voiceFab = document.getElementById('aiVoiceFab');
+    const guideFab = document.getElementById('aiGuideFab');
+    if (voiceFab) voiceFab.classList.add('welcome-highlight');
+    if (guideFab) guideFab.classList.add('welcome-highlight');
+  },
+
+  removeHighlight() {
+    const voiceFab = document.getElementById('aiVoiceFab');
+    const guideFab = document.getElementById('aiGuideFab');
+    if (voiceFab) voiceFab.classList.remove('welcome-highlight');
+    if (guideFab) guideFab.classList.remove('welcome-highlight');
+  },
+
+  // ---- Popup ----
+
+  createPopup() {
+    // Remove any stale popup
+    const old = document.getElementById('idleHelpPopup');
+    if (old) old.remove();
+
+    const el = document.createElement('div');
+    el.id = 'idleHelpPopup';
+    el.setAttribute('role', 'status');
+    el.setAttribute('aria-live', 'polite');
+    el.style.cssText = [
+      'position:fixed',
+      'bottom:90px',
+      'right:24px',
+      'z-index:9997',
+      'background:#fff',
+      'border:1px solid #dce4e1',
+      'border-top:3px solid #1e3a5f',
+      'border-radius:10px',
+      'box-shadow:0 6px 24px rgba(22,50,45,0.18)',
+      'padding:14px 16px 12px',
+      'max-width:280px',
+      'min-width:220px',
+      'font-family:inherit',
+      'color:#1e3a5f',
+      'animation:idle-popup-in 0.2s ease-out'
+    ].join(';');
+
+    el.innerHTML = `
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
+        <div>
+          <p style="margin:0 0 4px;font-size:13px;font-weight:700;letter-spacing:0.3px;">Need help?</p>
+          <p style="margin:0;font-size:12px;line-height:1.5;color:#2c5282;">You need any help? Ask me by tapping the mic or click Ask EPFO Guide. I'll guide you from here.</p>
+        </div>
+        <button id="idleHelpClose" aria-label="Close help reminder" style="background:none;border:none;cursor:pointer;font-size:18px;color:#6b7c93;padding:0;margin-top:-2px;flex-shrink:0;">×</button>
+      </div>
+    `;
+
+    document.body.appendChild(el);
+    this._popupEl = el;
+
+    // Close button
+    document.getElementById('idleHelpClose').addEventListener('click', () => this.hide());
+    return el;
+  },
+
+  // ---- Show / Hide ----
+
+  show() {
+    if (!this.canShow()) return;
+    this._lastFired = Date.now();
+
+    this.addHighlight();
+    this.createPopup();
+
+    // Browser TTS — purely frontend, no external API
+    try {
+      if (typeof voiceEngine !== 'undefined' && window.speechSynthesis) {
+        const utterance = voiceEngine.speakResponse(
+          "You need any help? Ask me by tapping the mic or click Ask EPFO Guide. I'll guide you from here.",
+          'en'
+        );
+        if (utterance) {
+          utterance.onend = () => this.removeHighlight();
+          utterance.onerror = () => this.removeHighlight();
+        }
+      }
+    } catch (e) {
+      // Fail silently — popup is still shown
+    }
+
+    // Auto-dismiss
+    clearTimeout(this._autoDismissTimer);
+    this._autoDismissTimer = setTimeout(() => this.hide(), IDLE_HELP_AUTO_DISMISS);
+
+    // Safety: always remove highlight after a maximum duration
+    clearTimeout(this._highlightTimer);
+    this._highlightTimer = setTimeout(() => this.removeHighlight(), 12000);
+  },
+
+  hide() {
+    clearTimeout(this._autoDismissTimer);
+    clearTimeout(this._highlightTimer);
+    this.removeHighlight();
+    if (this._popupEl) {
+      this._popupEl.remove();
+      this._popupEl = null;
+    }
+  },
+
+  // ---- Init ----
+
+  init() {
+    // Activity events that should reset the timer
+    const activityEvents = ['click', 'keydown', 'touchstart', 'scroll', 'change', 'input'];
+    const onActivity = () => {
+      // If popup is visible, hide it when user resumes activity
+      if (this._popupEl) this.hide();
+      this.resetTimer();
+    };
+
+    activityEvents.forEach(ev => {
+      document.addEventListener(ev, onActivity, { passive: true, capture: true });
+    });
+
+    // When navigation happens, reset timer (new page = fresh session)
+    window.addEventListener('hashchange', () => {
+      this.hide();
+      this.resetTimer();
+    });
+
+    // Start the initial timer
+    this.resetTimer();
+  }
+};
+
+// Add popup slide-in animation (tiny, isolated keyframe)
+(function injectIdleHelpStyles() {
+  if (document.getElementById('idleHelpStyles')) return;
+  const s = document.createElement('style');
+  s.id = 'idleHelpStyles';
+  s.textContent = `@keyframes idle-popup-in {
+    from { opacity:0; transform:translateY(10px); }
+    to   { opacity:1; transform:translateY(0); }
+  }`;
+  document.head.appendChild(s);
+})();
+
+// Start idle help reminder after engines are ready
+(function startIdleHelp() {
+  const tryStart = () => {
+    if (typeof guideState !== 'undefined' && typeof voiceEngine !== 'undefined') {
+      idleHelp.init();
+    } else {
+      setTimeout(tryStart, 300);
+    }
+  };
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    setTimeout(tryStart, 500);
+  } else {
+    window.addEventListener('DOMContentLoaded', () => setTimeout(tryStart, 500));
+  }
+})();
