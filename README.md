@@ -4,44 +4,24 @@ A responsive web prototype that combines an EPFO-style member portal with an AI-
 
 > **Status:** Prototype / demonstration system using simulated member data and claim journeys. It is not connected to live EPFO systems and should not be used for real submissions.
 
-## Skills Gained & Relevance to Robotics / AI Projects
+## Skills Gained
 
-This project developed several skills that are directly transferable to software-heavy robotics, autonomous-systems, AI and human-robot interaction work.
-
-### Technical Skills Gained
-
-- **AI/LLM integration** — integrated Google Gemini and Groq into an application workflow.
-- **Natural-language intent classification** — converted free-form user requests into structured application actions.
-- **Context-aware decision making** — used page, journey, step, target-field and application-state context when interpreting commands.
-- **Controlled action generation** — restricted AI output to predefined actions instead of allowing unrestricted model-generated application behaviour.
-- **AI output validation** — validated actions, journey IDs, claim types and languages on the server side.
-- **Fallback decision systems** — implemented deterministic rules as a backup to model-based reasoning.
-- **Multilingual interaction** — supported English, Hindi and Hinglish input and UI localization.
-- **Voice-command pipelines** — tested audio input, multipart uploads, transcription/action handling and contextual commands.
-- **Scenario-based testing** — created dedicated tests for ambiguous requests, multilingual input, contextual questions, paused journeys and voice commands.
-- **Backend API development** — built Node.js/Express endpoints for AI and voice workflows.
-- **Frontend engineering** — developed responsive browser-based interfaces with HTML, CSS and JavaScript.
-- **State management** — represented active journeys, steps, targets and guidance states in a structured way.
-- **Git/GitHub workflow** — maintained a structured repository and documented the implementation.
-- **Technical documentation** — organized architecture, features, setup instructions, testing and engineering decisions.
-
-### Why These Skills Matter for Robotics
-
-The strongest transferable idea is the **pipeline from human instruction → context → intelligent decision → constrained action**. That same software pattern can be adapted to robotics systems where a language or vision-language model proposes an action that must then be checked against robot state, safety constraints and execution requirements.
-
-The project therefore provides useful evidence for:
-
-- AI-enabled autonomous systems
-- Vision-language-action software concepts
-- Human-robot interaction
-- Intelligent command interpretation
-- Safety-oriented action validation
-- Robot software architecture
-- Simulation/test-driven development
-- AI-agent and decision-layer development
-- Multimodal interaction
-
-The repository does **not** by itself demonstrate ROS 2, SLAM, robot perception, sensor fusion, kinematics, dynamics, MPC, CAD or physical robot control. Those should only be claimed after separately demonstrating them.
+- **AI / LLM Integration** — Google Gemini and Groq integration for intelligent application workflows.
+- **Natural Language Processing** — intent classification and interpretation of free-form user requests.
+- **Context-Aware Decision Making** — using application state and user context to determine the appropriate action.
+- **Intelligent Action Routing** — converting natural-language requests into structured, predefined actions.
+- **AI Output Validation** — validating model-generated actions, journey IDs, claim types and languages before application use.
+- **Rule-Based Decision Systems** — deterministic fallback logic for reliable behaviour when AI services are unavailable.
+- **AI-Assisted Automation** — connecting intelligent interpretation with application workflows.
+- **Voice Command Processing** — audio input handling, voice-command testing and contextual command processing.
+- **Multilingual AI Interaction** — English, Hindi and Hinglish language handling and localization.
+- **State Management** — structured handling of journeys, steps, targets and guidance states.
+- **Scenario-Based Testing** — testing ambiguous requests, multilingual input, contextual commands and voice workflows.
+- **Backend API Development** — Node.js and Express API development for AI and voice workflows.
+- **Frontend Development** — responsive interfaces using HTML, CSS and JavaScript.
+- **Defensive Software Engineering** — validation, controlled outputs and fallback behaviour.
+- **Git & GitHub** — repository management, version control and project documentation.
+- **Technical Documentation** — documenting architecture, features, setup, testing and implementation details.
 
 ## Project Highlights
 
@@ -299,41 +279,26 @@ UI strings are separated from view logic through the `i18n.js` localization stru
 
 The frontend uses semantic interaction patterns including navigation state attributes such as `aria-expanded` and `aria-controls`.
 
-## Transferable Skills for Robotics Projects
+## Robotics-Relevant Skills Demonstrated
 
-| Skill from this project | Robotics relevance |
-|---|---|
-| Natural-language understanding | Human-robot interaction and language-conditioned robot commands |
-| Context-aware decision making | Robot mission state, navigation state and task planning |
-| Structured action routing | Converting AI decisions into safe, known robot actions |
-| Server-side validation | Safety boundaries between AI outputs and executable actions |
-| Fallback logic | Robust autonomy when an AI model or service is unavailable |
-| AI/LLM integration | Intelligent decision and agent layers |
-| Voice pipeline | Voice-controlled robots and multimodal interfaces |
-| State management | Robot/task/environment state representation |
-| Scenario-based testing | Simulation, autonomy testing and edge-case evaluation |
-| Git/GitHub | Collaborative robotics software development |
-| Documentation | Research code, experiment documentation and technical reports |
-| JavaScript/Node.js | General software engineering; Python/C++ would be the next robotics-oriented extension |
-
-## Robotics Skill Gaps to Develop
-
-For robotics-focused opportunities, the next high-value additions are:
-
-1. **Python for robotics** — NumPy, OpenCV, Matplotlib and scientific computing.
-2. **ROS 2 + Linux** — nodes, topics, services, launch files, TF and basic navigation.
-3. **Robot simulation** — Gazebo, Isaac Sim, Webots or equivalent.
-4. **Computer vision** — camera pipelines, object detection and obstacle detection.
-5. **Control systems** — PID, state estimation, trajectory tracking and introductory MPC.
-6. **Sensor integration** — camera, IMU, GPS and LiDAR.
-7. **Robotics mathematics** — coordinate transforms, kinematics, dynamics and optimization.
-8. **Autonomous navigation** — localization, mapping, path planning and obstacle avoidance.
-
-These additions would connect the current AI/software background to the robotics-specific requirements found across the target projects.
-
-## Resume-Ready Description
-
-> **AI-Assisted Member Portal / Conversational Guidance Prototype** — Built a responsive full-stack web application using Node.js/Express and browser-based JavaScript, integrating Gemini and Groq for context-aware intent routing, controlled action generation and multilingual guidance. Implemented server-side AI-output validation, deterministic fallback behaviour, voice-command testing and scenario-based integration tests.
+- Artificial Intelligence and Machine Learning Integration
+- Large Language Model Integration
+- Natural Language Processing
+- Context-Aware Decision Making
+- Intelligent Command Interpretation
+- Structured Action Generation
+- Action Validation and Safety-Oriented Logic
+- AI-Agent Architecture
+- Autonomous Decision-Layer Development
+- Voice and Multimodal Interaction
+- State and Task Management
+- Robust Fallback Systems
+- Scenario-Based Testing
+- Software Architecture
+- API Development
+- Full-Stack Development
+- Git and Version Control
+- Technical Documentation
 
 ## Repository Structure
 
@@ -366,4 +331,4 @@ No explicit open-source license is currently indicated by the repository. Add a 
 
 ## Summary
 
-This project demonstrates a strong foundation in **AI application engineering, contextual decision making, controlled action generation, multilingual interaction, voice pipelines, fallback systems, testing, Git/GitHub and technical documentation**. These skills are particularly transferable to AI-enabled robotics, autonomous systems and human-robot interaction. Robotics-specific frameworks, perception, controls, simulation and hardware integration should be developed separately and added to the portfolio once demonstrated.
+This project demonstrates a strong foundation in **AI application engineering, contextual decision making, controlled action generation, multilingual interaction, voice pipelines, fallback systems, testing, Git/GitHub and technical documentation**.
