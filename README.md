@@ -1,5 +1,7 @@
 # EPFO Member Portal — AI-Assisted Digital Guidance Prototype
+
 LIVE : https://epfo-02.onrender.com/#/dashboard
+
 A responsive web prototype that combines an EPFO-style member portal with an AI-assisted digital guidance layer. The project demonstrates full-stack JavaScript development, contextual AI interaction, multilingual UX, voice-command testing, controlled action routing, and deterministic fallback behaviour.
 
 > **Status:** Prototype / demonstration system using simulated member data and claim journeys. It is not connected to live EPFO systems and should not be used for real submissions.
@@ -322,12 +324,8 @@ The frontend uses semantic interaction patterns including navigation state attri
 
 - Member and claim data are simulated.
 - The application is a prototype and is not a live government-service integration.
-- AI responses require application-level validation and testing.
-- Robotics-specific capabilities such as ROS 2, SLAM, sensor fusion, CAD, kinematics, dynamics, MPC and physical robot control are not demonstrated by this repository.
 
-## License
 
-No explicit open-source license is currently indicated by the repository. Add a license file before publishing the project as reusable open-source software.
 
 ## Summary
 
